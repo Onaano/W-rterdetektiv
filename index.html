@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wörterdetektiv – Nomen, Verben &amp; Adjektive erkennen</title>
+<meta name="description" content="Wörterdetektiv: Ein Lernspiel der Reihe Förderfreude Games. Kinder lösen Wörterfälle und erkennen Nomen, Verben und Adjektive.">
+<meta name="theme-color" content="#2f5d62">
+<style>
+:root{
+  --cream:#f7eed8; --paper:#fffaf0; --wall:#e4ead3; --sage:#a9bfa6; --sage-l:#dbe6d6; --sage-d:#4f6f52;
+  --petrol:#2f5d62; --petrol-l:#d6e6e4; --terra:#a94a33; --terra-l:#e49a82; --rose:#e9c2c0; --must:#e2ac3a; --must-l:#f6e4b8;
+  --brown:#6b4a33; --brown-l:#c99a68; --ink:#3a2b20; --cork:#d9b27a; --line:#c9b88f;
+  --f-body:"Verdana","Trebuchet MS","Segoe UI",Tahoma,system-ui,sans-serif; --f-head:Georgia,"Times New Roman",serif; --f-type:"Courier New",Courier,monospace;
+  --ring:0 0 0 3px #fff,0 0 0 7px var(--petrol);
+}
+*{box-sizing:border-box}
+html{font-size:clamp(14px,calc(.9vmin + 8.5px),30px);-webkit-text-size-adjust:100%}
+html,body{margin:0;height:100%;overflow:hidden;background-color:var(--wall);color:var(--ink);font-family:var(--f-body);-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit;cursor:pointer;margin:0}
+button:focus{outline:none}
+button:focus-visible,a:focus-visible{outline:none;box-shadow:var(--ring)}
+.skip{position:absolute;left:-999px;top:0;background:#fff;padding:.5rem 1rem;z-index:99}.skip:focus{left:.5rem;top:.5rem}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+svg{display:block}
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;background-color:var(--wall);background-image:repeating-linear-gradient(90deg,rgba(79,111,82,.07) 0 1.6rem,transparent 1.6rem 3.2rem)}
+.pic{width:100%;height:100%}
+
+/* ---------- Werkzeuge (Ton, Hilfe) ---------- */
+.tools{display:flex;gap:.5rem;align-items:center}
+.tbtn{width:3rem;height:3rem;min-width:44px;min-height:44px;border-radius:50%;border:3px solid var(--brown);background:var(--paper);color:var(--petrol);display:grid;place-items:center;padding:0;box-shadow:0 2px 0 rgba(58,43,32,.35)}
+.tbtn svg{width:62%;height:62%}
+.tbtn:active{transform:translateY(1px)}
+.tbtn[aria-pressed="false"] .wave{display:none}.tbtn[aria-pressed="true"] .slash{display:none}
+.tbtn.help{background:var(--must-l)}
+.spk{width:3.2rem;height:3.2rem;min-width:44px;min-height:44px;border-radius:50%;border:3px solid var(--brown);background:var(--paper);color:var(--petrol);display:grid;place-items:center;padding:0;flex:none}
+.spk svg{width:60%;height:60%}.spk .slash{display:none}.spk .wave{display:block}
+
+/* ---------- Startseite: Detektivzentrale ---------- */
+#screen-start{overflow:hidden}
+.hq-top{position:relative;flex:none;height:clamp(92px,27vh,340px);display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;justify-items:center;padding:0 .5rem;overflow:hidden;border-bottom:4px solid var(--brown);background:linear-gradient(#e9efd9,#dbe5cb)}
+.hq-top .deco{height:100%;width:100%;min-width:0;grid-row:1}
+.hq-top .deco.l{grid-column:1}.hq-top .deco.r{grid-column:3}.hq-top .plaque{grid-column:2;grid-row:1}
+.hq-tools{position:absolute;top:.5rem;right:.6rem;z-index:3}
+.plaque{position:relative;z-index:2;text-align:center;background:var(--paper);border:4px solid var(--brown);border-radius:14px;padding:.55rem 1.6rem .6rem;box-shadow:0 0 0 4px var(--must) inset,0 6px 0 rgba(58,43,32,.3);max-width:92%}
+.plaque:before,.plaque:after{content:"";position:absolute;top:-1.1rem;width:3px;height:1.1rem;background:var(--brown)}.plaque:before{left:22%}.plaque:after{right:22%}
+.plaque h1{margin:0;font-family:var(--f-head);font-weight:700;font-size:clamp(1.5rem,6.2vmin + .3vw,4.2rem);letter-spacing:.07em;color:var(--petrol);line-height:1.05}
+.plaque h1 .hat{display:inline-block;width:.9em;height:.62em;vertical-align:.02em;margin-right:.2em}
+.plaque p{margin:.25rem 0 0;font-family:var(--f-type);font-weight:700;font-size:clamp(.78rem,1.8vmin + .15vw,1.35rem);color:var(--terra);letter-spacing:.02em}
+.cases{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;padding:.55rem .9rem .3rem}
+.cases h2{margin:0 0 .45rem;font-family:var(--f-type);font-size:clamp(.95rem,1.9vmin + .2vw,1.6rem);color:var(--petrol);letter-spacing:.04em;flex:none}
+.cases h2 span{display:inline-block;background:var(--must);color:var(--ink);border-radius:50%;width:1.5em;height:1.5em;text-align:center;line-height:1.5em;margin-right:.4em;font-weight:700}
+.folders{flex:1;min-height:0;width:100%;max-width:min(1500px,100%);display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,minmax(0,1fr));column-gap:clamp(.6rem,1.8vmin,1.5rem);row-gap:clamp(1.6rem,3.4vmin,2.6rem);padding-top:1.45rem}
+.folder{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.15rem;text-align:center;padding:1.2rem .6rem .5rem;min-height:0;border:3px solid var(--brown);border-radius:6px 14px 10px 10px;background:linear-gradient(#ecce94,#e2bd78);box-shadow:0 5px 0 rgba(58,43,32,.35);transition:transform .15s}
+.folder:before{content:attr(data-fall);position:absolute;left:-3px;top:-1.35rem;height:1.45rem;padding:0 .8rem;background:#e7c488;border:3px solid var(--brown);border-bottom:none;border-radius:10px 10px 0 0;font-family:var(--f-type);font-weight:700;font-size:.78rem;line-height:1.3rem;color:var(--ink);white-space:nowrap}
+.folder:hover{transform:translateY(-3px)}.folder:active{transform:translateY(1px);box-shadow:0 2px 0 rgba(58,43,32,.35)}
+.folder .ico{width:clamp(34px,min(11vmin,10.5vh),150px);aspect-ratio:12/10;flex:none}
+.folder .lbl{background:var(--paper);border:2px solid var(--line);border-radius:3px;padding:.25rem .5rem .3rem;max-width:100%;transform:rotate(-1deg)}
+.folder:nth-child(even) .lbl{transform:rotate(.8deg)}
+.folder .pl{display:block;font-family:var(--f-type);font-size:.78rem;font-weight:700;color:var(--terra);letter-spacing:.03em}
+.folder .ti{display:block;font-weight:700;font-size:clamp(.88rem,1.5vmin + .35vw,1.5rem);line-height:1.18;color:var(--ink)}
+.hq-desk{flex:none;position:relative;height:clamp(40px,10vh,110px);overflow:hidden;border-top:4px solid var(--brown);background:var(--brown-l)}
+.hq-desk .deco{position:absolute;bottom:0;height:100%;width:auto;max-width:50%}
+.hq-desk .deco.l{left:0}.hq-desk .deco.r{right:0}
+.credit{position:absolute;left:0;right:0;bottom:.15rem;text-align:center;font-size:.7rem;color:var(--ink);opacity:.8;z-index:2;font-family:var(--f-type)}
+
+/* ---------- Dialoge ---------- */
+.overlay{position:fixed;inset:0;z-index:50;background:rgba(58,43,32,.62);display:grid;place-items:center;padding:.8rem}
+.sheet{background:var(--paper);border:4px solid var(--brown);border-radius:12px;box-shadow:0 8px 0 rgba(58,43,32,.4);width:min(44rem,100%);max-height:100%;overflow:auto;padding:1rem 1.1rem 1.1rem;position:relative}
+.sheet:before{content:"";position:absolute;left:1.2rem;top:-.9rem;width:5.5rem;height:1.6rem;background:var(--cork);border:3px solid var(--brown);border-radius:6px 6px 0 0}
+.sheet h2{margin:.2rem 0 .3rem;font-family:var(--f-head);color:var(--petrol);font-size:1.45rem}
+.sheet .sub{margin:0 0 .8rem;font-size:1rem}
+.lvl-head{display:flex;gap:.7rem;align-items:center;margin-bottom:.4rem}
+.lvl-head .ico{width:4.2rem;aspect-ratio:12/10;flex:none}
+.lvl-head h2{margin:0;font-size:1.25rem;line-height:1.15}.lvl-head .pl{font-family:var(--f-type);font-weight:700;color:var(--terra);font-size:.85rem}
+.lvls{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem}
+.lvl{border:3px solid var(--brown);border-radius:10px;background:var(--cream);padding:.6rem .4rem;min-height:5.2rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.25rem;box-shadow:0 4px 0 rgba(58,43,32,.35)}
+.lvl:hover{background:var(--must-l)}.lvl:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(58,43,32,.35)}
+.lvl b{font-size:1.15rem;letter-spacing:.03em}.lvl small{font-size:.82rem;line-height:1.2;text-align:center}
+.lvl .stars{display:flex;gap:.2rem}.lvl .stars svg{width:1.1rem;height:1.1rem;color:var(--petrol)}
+.lvl .stars svg.off{opacity:.28}
+.btn{border:3px solid var(--brown);border-radius:12px;background:var(--cream);padding:.5rem 1.1rem;min-height:3rem;font-weight:700;font-size:1.05rem;box-shadow:0 4px 0 rgba(58,43,32,.35);display:inline-flex;align-items:center;justify-content:center;gap:.5rem}
+.btn:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(58,43,32,.35)}
+.btn.pri{background:var(--terra);color:#fff;border-color:#6e2e1f}
+.btn.pri:hover{background:#963f2a}
+.btn svg{width:1.3rem;height:1.3rem}
+.sheet .row{display:flex;justify-content:flex-end;margin-top:.8rem}
+.help-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem}
+.hcard{border:3px solid var(--brown);border-radius:10px;padding:.6rem .7rem;background:var(--cream)}
+.hcard h3{margin:0;font-family:var(--f-type);font-size:1.2rem;color:var(--petrol);letter-spacing:.04em}
+.hcard .alt{font-size:.8rem;margin:0 0 .3rem;color:var(--brown)}
+.hcard p{margin:.2rem 0;font-size:.95rem;line-height:1.35}
+.hcard .exs{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.4rem}.hcard .exs span{background:var(--paper);border:2px solid var(--line);border-radius:6px;padding:.1rem .5rem;font-weight:700;font-size:.95rem}
+
+/* ---------- Spielbildschirm ---------- */
+#screen-game{background-color:var(--wall)}
+.gbar{flex:none;display:flex;align-items:center;gap:.6rem;padding:.35rem .6rem;background:var(--petrol);color:var(--cream);border-bottom:4px solid var(--brown);min-height:3.5rem}
+.gbar .back{border:3px solid var(--cream);border-radius:999px;background:transparent;color:var(--cream);padding:.2rem .85rem .2rem .55rem;min-height:44px;font-weight:700;display:flex;align-items:center;gap:.35rem;font-size:.95rem;flex:none}
+.gbar .back svg{width:1.3rem;height:1.3rem}
+.gbar .back:hover{background:rgba(255,250,240,.14)}
+.gbar .back:focus-visible{box-shadow:0 0 0 3px var(--petrol),0 0 0 6px #fff}
+.gbar .ttl{flex:1;min-width:0;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;line-height:1.15}
+.gbar .fall{font-family:var(--f-type);font-weight:700;font-size:.85rem;color:#f6dc9a;letter-spacing:.04em;white-space:nowrap}
+.gbar .gt{font-family:var(--f-head);font-weight:700;font-size:1.2rem}
+.gbar .lv{font-family:var(--f-type);font-weight:700;font-size:.8rem;background:var(--must);color:var(--ink);border-radius:999px;padding:.05rem .65rem;letter-spacing:.06em}
+.gbar .tbtn{border-color:var(--cream)}
+.gbar .cnt{font-family:var(--f-type);font-weight:700;font-size:.85rem;color:var(--cream);white-space:nowrap}
+.nosound .spk{display:none}
+
+/* Fallakte (Fortschritt) */
+.fallakte{flex:none;display:flex;align-items:stretch;gap:.6rem;margin:.5rem .6rem 0;padding:.4rem .6rem .45rem;background:var(--cork);background-image:radial-gradient(rgba(107,74,51,.28) 1px,transparent 1.5px);background-size:9px 9px;border:4px solid var(--brown);border-radius:12px;box-shadow:0 4px 0 rgba(58,43,32,.3);position:relative;overflow-x:clip}
+.fa-label{flex:none;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:.1rem;background:var(--paper);border:2px solid var(--brown);border-radius:4px;padding:.15rem .6rem;font-family:var(--f-type);text-align:center;transform:rotate(-1.5deg);align-self:center}
+.fa-label b{font-size:.9rem;letter-spacing:.06em;color:var(--terra)}
+.fa-label span{font-size:.78rem;font-weight:700;white-space:nowrap}
+.fa-slots{flex:1;min-width:0;position:relative;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:.4rem;padding:0 .2rem}
+.fa-thread{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:3;overflow:visible}
+.fa-thread path{fill:none;stroke:var(--terra);stroke-width:2.6;stroke-linecap:round;vector-effect:non-scaling-stroke;opacity:0}
+.fa-thread path.on{opacity:1}
+.clue{position:relative;height:clamp(44px,9.4vh,92px);max-width:92px;width:100%;justify-self:center;background:var(--paper);border:2px solid var(--brown);border-radius:4px;padding:.3rem .15rem .12rem;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;box-shadow:0 2px 0 rgba(58,43,32,.3)}
+.clue .pin{position:absolute;left:50%;top:-.3rem;width:.7rem;height:.7rem;margin-left:-.35rem;border-radius:50%;background:#7a8f93;border:2px solid var(--ink);z-index:4}
+.clue svg{flex:1;min-height:0;width:100%}
+.clue .num{font-family:var(--f-type);font-weight:700;font-size:.7rem;line-height:1}
+.clue.locked{background:#efe3c4;border-style:dashed;border-color:#8d7455}
+.clue.locked svg{filter:brightness(0);opacity:.2}
+.clue.locked .pin{background:#c9bba0}
+.clue.on .pin{background:var(--terra)}
+.clue:nth-child(3n+1).on .pin{background:var(--terra)}.clue:nth-child(3n+2).on .pin{background:var(--petrol)}.clue:nth-child(3n).on .pin{background:var(--must)}
+.clue.on:nth-child(odd){transform:rotate(-2deg)}.clue.on:nth-child(even){transform:rotate(2.2deg)}
+.clue.pop{animation:pinpop .6s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pinpop{0%{transform:translateY(-.5rem) scale(1.18) rotate(-8deg);opacity:0}60%{opacity:1}100%{}}
+.fa-stamp{position:absolute;left:50%;top:50%;width:min(15rem,60%);transform:translate(-50%,-50%) rotate(-4deg);z-index:6;pointer-events:none;background:var(--paper);border-radius:10px;opacity:.97;animation:stampin .5s cubic-bezier(.2,1.5,.4,1)}
+@keyframes stampin{0%{transform:translate(-50%,-50%) scale(2.2) rotate(-14deg);opacity:0}100%{}}
+
+.stage-wrap{flex:1;min-height:0;display:flex;padding:.5rem .6rem .2rem}
+#stage{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;align-items:stretch;background:var(--paper);border:4px solid var(--brown);border-radius:14px;box-shadow:0 5px 0 rgba(58,43,32,.3);padding:.7rem .9rem;position:relative;background-image:repeating-linear-gradient(0deg,transparent 0 1.9rem,rgba(201,184,143,.35) 1.9rem calc(1.9rem + 1px))}
+#stage:before,#stage:after{content:"";position:absolute;top:-.8rem;width:4.4rem;height:1.4rem;background:rgba(226,172,58,.78);border:2px solid rgba(107,74,51,.5);transform:rotate(-3deg)}
+#stage:before{left:2rem}#stage:after{right:2rem;transform:rotate(2.5deg)}
+.task{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(.4rem,1.6vh,1rem);width:100%;max-width:70rem;margin:0 auto}
+.prompt{margin:0;font-family:var(--f-head);font-weight:700;font-size:clamp(1.15rem,2.5vmin + .5vw,2.3rem);color:var(--petrol);text-align:center;line-height:1.2;flex:none}
+.prompt .tag{display:inline-block;font-family:var(--f-type);background:var(--must);color:var(--ink);padding:0 .45em;border-radius:6px;border:2px solid var(--brown);letter-spacing:.04em}
+
+.fbrow{flex:none;display:flex;align-items:center;gap:.7rem;padding:.2rem .6rem calc(.45rem + env(safe-area-inset-bottom));min-height:4.6rem}
+#fb{flex:1;min-width:0;display:flex;align-items:center;gap:.6rem;border:3px solid transparent;border-radius:12px;padding:.35rem .7rem;min-height:3.7rem;font-size:1.02rem;line-height:1.3}
+#fb .ficon{flex:none;width:2rem;height:2rem}
+#fb .fh{display:block;font-weight:700;font-size:1.15rem;letter-spacing:.02em}
+#fb.ok{background:var(--sage-l);border-color:var(--sage-d)}
+#fb.hint{background:var(--must-l);border-color:#b98a28}
+#fb.info{background:var(--petrol-l);border-color:var(--petrol)}
+#btn-next{flex:none;min-width:8.5rem}
+
+/* Antwortknöpfe: Farbe wechselt zufällig und hat nie mit der Wortart zu tun */
+.sk0{background:#fffaf0}.sk1{background:#dbe6d6}.sk2{background:#f3d9d6}.sk3{background:#f6e4b8}.sk4{background:#d6e6e4}
+.abtn{border:3px solid var(--brown);border-radius:12px;box-shadow:0 5px 0 rgba(58,43,32,.38);min-height:3.4rem;padding:.4rem .6rem;font-weight:700;font-size:clamp(1.05rem,2.6vmin + .3vw,2.2rem);letter-spacing:.04em;color:var(--ink);display:flex;align-items:center;justify-content:center;text-align:center;position:relative}
+.abtn:hover:not(:disabled){transform:translateY(-2px)}
+.abtn:active:not(:disabled){transform:translateY(2px);box-shadow:0 2px 0 rgba(58,43,32,.38)}
+.abtn:disabled{cursor:default}
+.abtn.tried{background:#ece4d2;color:#5a4a3a;border-style:dashed;box-shadow:none;transform:none}
+.abtn.tried:after{content:"?";position:absolute;right:.45rem;top:.2rem;font-family:var(--f-head);font-size:1.1em;color:var(--brown)}
+.abtn.right{background:var(--sage-l);border-color:var(--sage-d);box-shadow:0 0 0 4px var(--sage-d)}
+.abtn.right:before{content:"✓";font-size:1.1em;margin-right:.45rem;color:var(--sage-d)}
+.abtn.dim{opacity:.55;box-shadow:none}
+
+/* Modus 1 */
+.t-which .wcard-big{position:relative;display:flex;align-items:center;justify-content:center;gap:clamp(.6rem,2vw,1.6rem);background:#fff;border:3px solid var(--brown);border-top:2.4rem solid #fff;border-radius:8px;box-shadow:0 6px 0 rgba(58,43,32,.3);padding:.9rem 1.5rem 1rem;min-width:min(30rem,100%);max-width:100%;background-image:repeating-linear-gradient(0deg,transparent 0 2.2rem,#cfe0e0 2.2rem calc(2.2rem + 2px))}
+.t-which .wcard-big:before{content:"";position:absolute;left:0;right:0;top:-1.1rem;height:2px;background:var(--terra);opacity:.75}
+.t-which .wcard-big .figure{width:clamp(5rem,16vmin,11rem);aspect-ratio:12/10;flex:none}
+.t-which .word{font-weight:700;font-size:clamp(2.1rem,8.4vmin + .6vw,6rem);line-height:1.1;letter-spacing:.02em;word-break:break-word;text-align:center}
+.t-which .answers{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(.5rem,1.6vw,1.2rem);width:100%;max-width:60rem}
+.t-which .abtn{min-height:clamp(3.4rem,13vh,7rem)}
+
+/* Modus 2: Aktenschrank */
+.t-sort{justify-content:center}
+.tray{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;align-content:flex-start;min-height:3.6rem;width:100%;flex:none}
+.wc{border:3px solid var(--brown);border-radius:10px;background:var(--paper);box-shadow:0 4px 0 rgba(58,43,32,.35);min-height:3rem;min-width:44px;padding:.25rem .9rem;font-weight:700;font-size:clamp(1.05rem,2.5vmin + .3vw,2.1rem);touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab;display:flex;align-items:center;gap:.35rem}
+.wc:hover{background:var(--must-l)}
+.wc.sel{background:var(--must);box-shadow:0 0 0 4px var(--ink),0 4px 0 rgba(58,43,32,.35)}
+.wc.sel:before{content:"☛";font-size:1em}
+.wc.drag-src{opacity:.35}
+.wc.ghost{position:fixed;z-index:80;pointer-events:none;transform:rotate(-3deg) scale(1.06);box-shadow:0 10px 18px rgba(58,43,32,.45);margin:0}
+.wc.in{cursor:default;background:#fff;box-shadow:none;border-width:2px;border-radius:6px;min-height:2.3rem;font-size:clamp(.95rem,2.1vmin + .25vw,1.8rem);padding:.1rem .6rem}
+.wc.in:before{content:"✓";color:var(--sage-d);font-size:.9em}
+.drawers{flex:1;min-height:0;max-height:22rem;width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(.5rem,1.6vw,1.2rem);align-items:stretch}
+.drawer{display:flex;flex-direction:column;border:4px solid var(--brown);border-radius:10px;background:#b9cdb6;box-shadow:0 5px 0 rgba(58,43,32,.38);padding:.3rem .4rem .45rem;min-width:0;min-height:7.5rem;text-align:center;color:var(--ink)}
+.drawer:hover:not(.done){background:#c9d9c5}
+.drawer.over{background:var(--must-l);box-shadow:0 0 0 5px var(--must),0 5px 0 rgba(58,43,32,.38)}
+.drawer .plate{margin:0 auto .4rem;background:var(--paper);border:2px solid var(--brown);border-radius:4px;padding:.1rem .8rem;font-family:var(--f-type);font-weight:700;font-size:clamp(.9rem,1.9vmin + .3vw,1.7rem);letter-spacing:.05em;position:relative}
+.drawer .plate:before,.drawer .plate:after{content:"";position:absolute;top:50%;width:.5rem;height:.5rem;margin-top:-.25rem;border-radius:50%;background:var(--brown);}
+.drawer .plate:before{left:.18rem}.drawer .plate:after{right:.18rem}
+.drawer .slot{flex:1;min-height:0;display:flex;flex-wrap:wrap;gap:.3rem;align-content:flex-start;justify-content:center;border-radius:6px;background:rgba(255,250,240,.38);padding:.3rem}
+.drawer.done{background:var(--sage-l)}
+.drawer:after{content:"";flex:none;align-self:center;width:3.4rem;height:.55rem;border-radius:999px;background:var(--brown);margin-top:.4rem;box-shadow:0 2px 0 rgba(255,250,240,.6)}
+
+/* Modus 3: Spurensuche */
+.t-odd .cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(.5rem,1.6vw,1.2rem);width:100%}
+.tcard{position:relative;display:flex;align-items:center;justify-content:center;text-align:center;border:3px solid var(--brown);border-radius:10px;min-height:clamp(4.4rem,18vh,9rem);padding:.6rem .5rem .4rem;font-weight:700;font-size:clamp(1.15rem,3vmin + .4vw,2.7rem);box-shadow:0 5px 0 rgba(58,43,32,.38);color:var(--ink);word-break:break-word}
+.tcard .no{position:absolute;left:.4rem;top:.15rem;font-family:var(--f-type);font-size:.75rem;color:var(--brown)}
+.tcard:hover:not(:disabled){transform:translateY(-2px)}
+.tcard:disabled{cursor:default}
+.tcard.tried{background:#ece4d2;border-style:dashed;box-shadow:none;color:#5a4a3a}
+.tcard.tried:after{content:"?";position:absolute;right:.45rem;top:.15rem;font-family:var(--f-head);color:var(--brown)}
+.tcard.right{background:var(--must-l);border-color:var(--ink);box-shadow:0 0 0 5px var(--must)}
+.tcard.right:before{content:"Außenseiter";position:absolute;left:50%;top:-.9rem;transform:translateX(-50%);background:var(--ink);color:#fff;font-family:var(--f-type);font-size:.72rem;padding:.05rem .5rem;border-radius:999px;white-space:nowrap}
+.tcard.same{background:var(--paper);opacity:.85}
+.odd-tools{display:flex;gap:.6rem;align-items:center}
+
+/* Modus 4: Pinnwand */
+.t-sent{gap:clamp(.5rem,2vh,1.2rem)}
+.board{position:relative;width:100%;background:var(--cork);background-image:radial-gradient(rgba(107,74,51,.28) 1px,transparent 1.5px);background-size:9px 9px;border:4px solid var(--brown);border-radius:10px;padding:1.2rem 1rem .9rem;display:flex;justify-content:center}
+.note{position:relative;background:#fffdf4;border:2px solid var(--line);box-shadow:0 5px 0 rgba(58,43,32,.3);padding:.9rem 1rem .8rem;max-width:100%;display:flex;gap:.8rem;align-items:center}
+.note:before{content:"";position:absolute;left:50%;top:-.7rem;width:1rem;height:1rem;margin-left:-.5rem;border-radius:50%;background:var(--terra);border:2px solid var(--ink)}
+.toks{display:flex;flex-wrap:wrap;gap:.2rem .35rem;justify-content:center;align-items:flex-start}
+.tok{position:relative;border:2px solid transparent;border-radius:8px;background:transparent;padding:.1em .3em .15em;min-height:2.8rem;min-width:44px;font-size:clamp(1.4rem,5.2vmin + .3vw,3.4rem);font-weight:700;line-height:1.2;display:inline-flex;flex-direction:column;align-items:center;justify-content:flex-start;color:var(--ink);border-bottom:3px solid var(--line)}
+.tok:hover:not(:disabled){background:var(--must-l)}
+.tok:disabled{cursor:default}
+.tok.picked{background:var(--must);border:2px solid var(--ink);border-bottom:4px solid var(--ink)}
+.tok.picked .w:after{content:" ✓";font-size:.7em}
+.tok.tried{opacity:.6;border:2px dashed var(--brown);background:#ece4d2}
+.tok.right{background:var(--sage-l);border:2px solid var(--sage-d);border-bottom:4px solid var(--sage-d)}
+.tok .tg{display:block;font-family:var(--f-type);font-size:.38em;letter-spacing:.04em;margin-top:.1rem;color:var(--petrol);font-weight:700}
+.t-sent .actions{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;justify-content:center}
+
+/* Modus 5: Notizbuch */
+.t-find .book{position:relative;display:flex;gap:clamp(.6rem,2vw,1.6rem);align-items:center;justify-content:center;width:100%;background:#fff;border:3px solid var(--brown);border-radius:6px 12px 12px 6px;padding:.8rem 1rem .8rem 2.6rem;box-shadow:0 5px 0 rgba(58,43,32,.3);background-image:repeating-linear-gradient(0deg,transparent 0 2rem,#cfe0e0 2rem calc(2rem + 2px))}
+.t-find .book:before{content:"";position:absolute;left:1.9rem;top:0;bottom:0;width:2px;background:var(--rose)}
+.t-find .book:after{content:"";position:absolute;left:.5rem;top:.5rem;bottom:.5rem;width:.7rem;background:radial-gradient(circle,var(--brown) 0 .22rem,transparent .26rem) 0 0/100% 1.6rem repeat-y}
+.t-find .polaroid{flex:none;width:clamp(6.5rem,24vmin,15rem);aspect-ratio:12/10;background:#fff;border:3px solid var(--brown);padding:.3rem;box-shadow:0 5px 0 rgba(58,43,32,.3);transform:rotate(-2deg);position:relative}
+.t-find .polaroid:before{content:"";position:absolute;left:50%;top:-.8rem;width:3rem;height:1.2rem;margin-left:-1.5rem;background:rgba(226,172,58,.8);border:2px solid rgba(107,74,51,.5);transform:rotate(2deg)}
+.t-find .bookbody{display:flex;flex-direction:column;gap:.5rem;align-items:center;min-width:0;flex:1}
+.t-find .gapsent{font-size:clamp(1.25rem,3.8vmin + .3vw,2.8rem);font-weight:700;text-align:center;line-height:1.5}
+.t-find .blank{display:inline-block;min-width:4.5em;border-bottom:4px solid var(--ink);margin:0 .15em;text-align:center;color:var(--sage-d);padding:0 .2em;background:linear-gradient(transparent 70%,rgba(226,172,58,.5) 70%)}
+.t-find .blank.full{background:var(--sage-l);border-bottom-color:var(--sage-d);color:var(--ink)}
+.t-find .answers{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(.5rem,1.6vw,1.2rem);width:100%;max-width:60rem}
+.t-find .abtn{min-height:clamp(3.4rem,11.5vh,6.5rem);text-transform:none;letter-spacing:.02em}
+.t-find .picword{font-weight:700;font-size:clamp(1.2rem,3vmin,2.2rem);min-height:1.4em;text-align:center}
+.find-row{display:flex;gap:.6rem;align-items:center;justify-content:center}
+
+/* ---------- Abschluss ---------- */
+#screen-end{align-items:center;overflow:hidden}
+.endwrap{flex:1;min-height:0;width:100%;max-width:62rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;padding:.8rem}
+.endwrap .stampbig{width:clamp(11rem,34vmin,22rem);animation:stampin .6s cubic-bezier(.2,1.5,.4,1);flex:none}
+.endwrap h2{margin:0;font-family:var(--f-head);font-size:clamp(1.25rem,3.4vmin + .4vw,2.6rem);color:var(--petrol);text-align:center;flex:none}
+.endwrap .scene{flex:1;min-height:0;width:100%;display:flex;justify-content:center}
+.endwrap .scene>svg{height:100%;width:auto;max-width:100%}
+.endwrap .btns{display:flex;gap:.8rem;flex-wrap:wrap;justify-content:center;flex:none;padding-bottom:.2rem}
+.endwrap .btn{font-size:clamp(1rem,1.9vmin + .3vw,1.6rem);min-height:3.4rem;padding:.5rem 1.4rem}
+
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+
+/* ---------- Anpassungen: schmale / niedrige Geräte ---------- */
+@media (max-aspect-ratio:10999/10000){
+  .folders{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr))}
+}
+@media (max-width:640px){
+  .hq-top .deco{display:none}
+  .plaque{padding:.4rem 1rem .45rem}
+  .gbar .gt{font-size:1rem}
+  .gbar .back span{display:none}.gbar .back{padding:.2rem .55rem}
+  .lvls{grid-template-columns:1fr}.lvl{flex-direction:row;justify-content:flex-start;gap:.8rem;min-height:4rem;padding:.4rem .8rem}.lvl small{text-align:left;flex:1}
+  .help-grid{grid-template-columns:1fr}
+  .fa-label{display:none}
+  .fallakte{padding:.35rem .45rem .4rem}
+  .t-which .answers,.t-find .answers{grid-template-columns:1fr;max-width:22rem}
+  .t-which .abtn{min-height:3.3rem}
+  .t-odd .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .drawers{gap:.35rem}
+  .drawer{padding:.2rem .2rem .3rem}.drawer .plate{padding:.05rem .5rem}
+}
+@media (max-width:640px) and (min-aspect-ratio:11/10){ .t-which .answers,.t-find .answers{grid-template-columns:repeat(3,1fr);max-width:none} }
+@media (max-height:520px){
+  html{font-size:13px}
+  .hq-top{height:clamp(64px,26vh,120px)}
+  .hq-top .deco{display:none}
+  .plaque h1{font-size:clamp(1.2rem,8vh,2rem)}.plaque p{margin-top:.1rem}
+  .cases{padding-top:.4rem}.cases h2{display:none}
+  .hq-desk{height:clamp(26px,8vh,44px)}
+  .gbar{min-height:3rem;padding:.15rem .5rem}
+  .gbar .tbtn{width:2.6rem;height:2.6rem}
+  .fallakte{margin-top:.3rem;padding:.25rem .45rem}
+  .fa-label{display:none}
+  .clue{height:clamp(38px,12vh,60px);padding-top:.25rem}
+  .stage-wrap{padding-top:.4rem}
+  #stage{padding:.35rem .6rem}
+  .fbrow{min-height:3.4rem;padding-bottom:.25rem}
+  #fb{min-height:3rem;padding:.2rem .5rem;font-size:.95rem}
+  #fb .ficon{width:1.5rem;height:1.5rem}
+  #fb .fh{font-size:1.02rem}
+  .task{gap:.35rem}
+  .prompt{font-size:1.05rem}
+  .t-which .wcard-big{border-top-width:1.4rem;padding:.35rem 1rem .45rem}
+  .t-which .wcard-big:before{top:-.7rem}
+  .t-which .word{font-size:clamp(1.8rem,13vh,3.2rem)}
+  .t-which .wcard-big .figure{width:clamp(3.4rem,14vh,6rem)}
+  .abtn{min-height:2.9rem}.t-which .abtn{min-height:clamp(2.9rem,12vh,4rem)}
+  .wc{min-height:2.7rem;padding:.1rem .7rem}
+  .drawer{min-height:5.2rem}
+  .tcard{min-height:3.6rem}
+  .board{padding:.9rem .6rem .5rem}.note{padding:.6rem .7rem .5rem}
+  .tok{min-height:2.6rem;font-size:clamp(1.15rem,8.5vh,2rem)}
+  .t-find .book{padding:.4rem .8rem .4rem 2.2rem}
+  .t-find .polaroid{width:clamp(5rem,26vh,9rem)}
+  .sheet{padding:.7rem .9rem .8rem}.lvl{min-height:3.6rem}
+  .endwrap{gap:.3rem;padding:.4rem}
+}
+@media (max-height:520px) and (max-width:900px) and (min-aspect-ratio:11/10){
+  .folders{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr))}
+  .folder{padding-top:.9rem}.folder .pl{display:none}.folder .lbl{padding:.15rem .4rem}.folder .ti{font-size:.85rem}.folder .ico{width:2.6rem}
+  .t-odd .cards{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .lvls{grid-template-columns:repeat(3,1fr)}.lvl{flex-direction:column;justify-content:center;min-height:4rem}.lvl small{display:none}
+  .help-grid{grid-template-columns:repeat(3,1fr)}.hcard p{font-size:.8rem}
+}
+/* ---------- Mindestgrößen Touch (44px) ---------- */
+.btn,.abtn,.wc:not(.in),.tcard,.tok,.tbtn,.gbar .back,.lvl,.folder{min-height:max(1em,44px)}
+.btn,.abtn,.wc:not(.in),.tok,.gbar .back,.tbtn{min-width:44px}
+.btn{min-height:44px}.abtn{min-height:max(2.9rem,44px)}.wc:not(.in){min-height:max(2.7rem,44px)}
+.t-which .abtn,.t-find .abtn{min-height:max(2.9rem,44px)}
+@media (min-width:641px) and (min-height:521px){.hq-top .plaque{align-self:end;margin-bottom:.9rem}}
+@media (max-width:640px) and (min-height:521px){.hq-top{padding-top:3.4rem}.folder .ico{width:min(11vmin,8.2vh)}.folder .ti{font-size:.8rem}.folder .lbl{padding:.12rem .35rem .18rem}}
+@media (max-width:640px){.plaque h1{font-size:min(1.7rem,calc((100vw - 5rem)/11.4))}.drawer .plate{font-size:min(1rem,3.4vw)}}
+@media (min-width:641px) and (max-width:1000px){.plaque h1{font-size:min(clamp(1.5rem,6.2vmin,4.2rem),calc((100vw - 18rem)/11.4))}}
+@media (max-height:520px){
+  .t-sent{gap:.2rem}.t-sent .prompt{margin:0}
+  .board{padding:.7rem .5rem .35rem}.note{padding:.35rem .6rem .3rem;gap:.5rem}
+  .toks{gap:0 .25rem}
+  .tok{font-size:clamp(1rem,6.4vh,1.6rem);min-height:44px;padding:0 .25em}
+  .tok .tg{font-size:.6em;margin-top:0;line-height:1}
+  .t-sent .actions{flex-wrap:nowrap;gap:.5rem}.t-sent .actions span{font-size:.85rem;margin:0}
+  .t-sent .actions .btn{min-height:44px;padding:.1rem 1rem}
+}
+@media (max-width:640px) and (min-height:521px){
+  .tok{font-size:clamp(1.1rem,6.2vw,1.6rem);padding:0 .25em}.tok .tg{font-size:.58em}
+  .board{padding:.9rem .5rem .5rem}.note{padding:.5rem .6rem;gap:.4rem}
+}
+@media (max-width:640px) and (max-aspect-ratio:1/1){
+  .t-sent{position:relative}
+  .t-sent .note{flex-direction:column;gap:.2rem}
+  .t-sent .note .spk{position:absolute;right:0;top:-3.1rem;width:44px;height:44px;z-index:3}
+  .t-sent .prompt{padding-right:48px;padding-left:48px}
+}
+@media (max-width:420px) and (min-height:521px){
+  .tok{font-size:clamp(1rem,5.2vw,1.35rem)}.t-sent .toks{gap:0 .15rem}
+}
+@media (max-height:520px){.drawer:after{display:none}.drawer .plate{margin-bottom:.15rem}.wc.in{min-height:1.9rem}}
+@media (max-width:420px) and (min-height:521px){
+  #fb{font-size:.86rem;padding:.35rem .55rem;gap:.4rem}#fb .fh{font-size:.96rem}#btn-next{padding:.4rem .8rem;min-width:0}
+  .t-find .gapsent{font-size:1.08rem;line-height:1.4}.t-find .book{padding:.45rem .6rem .45rem 1.7rem;gap:.5rem}
+  .t-find .abtn,.t-which .abtn{min-height:max(2.9rem,44px)}.t-find .answers{gap:.4rem}.t-find .polaroid{width:clamp(5rem,30vw,8rem)}
+}
+@media (max-height:520px){
+  .tray{gap:.3rem;min-height:0}.t-sort,.t-sort .task{gap:.25rem}.drawer{min-height:4rem;padding:.15rem .25rem .2rem}.drawer .plate{font-size:.85rem;margin-bottom:.1rem}.drawer .slot{padding:.15rem;gap:.2rem}
+  .wc:not(.in){font-size:.98rem;padding:.1rem .6rem}
+}
+@media (max-height:520px){.t-sent .board{padding:.55rem .5rem .25rem}.t-sent .note{padding:.25rem .5rem .2rem}.stage-wrap{padding-top:.25rem}}
+.t-sent .note .actions.inline{flex:none;flex-direction:column;gap:.3rem}
+@media (max-height:520px){.wc.in{min-height:1.6rem;font-size:.82rem;padding:0 .35rem;border-width:1.5px}.drawer .slot{gap:.15rem;padding:.1rem}}
+/* ---------- Lesbarkeit (Feedback): größere, kräftigere Beschriftungen ---------- */
+.drawer .plate{font-size:clamp(1.25rem,2.9vmin + .5vw,2.5rem);font-weight:900;letter-spacing:.06em;padding:.2rem 1.5rem;color:var(--ink);border-width:3px;-webkit-text-stroke:.6px var(--ink);text-shadow:none}
+.drawer .plate:before{left:.4rem}.drawer .plate:after{right:.4rem}
+.drawer .plate:before,.drawer .plate:after{width:.4rem;height:.4rem;margin-top:-.2rem}
+.gbar .fall{font-size:1rem;color:#fff3cf;-webkit-text-stroke:.4px #fff3cf}
+.gbar .lv{font-size:.95rem;font-weight:900}.gbar .cnt{font-size:1rem;-webkit-text-stroke:.4px var(--cream)}
+.folder .pl{font-size:.95rem;font-weight:900}.folder:before{font-size:.95rem;font-weight:900;height:1.7rem;line-height:1.5rem;top:-1.6rem}
+.tcard .no{font-size:.92rem;font-weight:900;color:var(--ink)}
+.fa-label{font-weight:900}
+.clue .n,.clue span{font-weight:900}
+/* Wort in Modus 1: nicht mehr "schwebend" – ruhig, flach, kleiner */
+.t-which .wcard-big{border-top-width:3px;border-top-color:var(--brown);box-shadow:none;border-radius:10px;background:var(--paper);padding:.7rem 1.4rem}
+.t-which .wcard-big:before{display:none}
+.t-which .word{font-size:clamp(1.8rem,5.2vmin + .4vw,3.8rem);font-weight:700;letter-spacing:.01em}
+.t-which .wcard-big .figure{width:clamp(4rem,11vmin,8rem)}
+.fa-label b{font-size:1.05rem;font-weight:900;color:#8a3420}.fa-label span{font-size:.9rem;font-weight:900}
+@media (max-width:640px){.drawer .plate{font-size:clamp(.78rem,3.4vw,1.1rem);padding:.1rem .8rem;letter-spacing:.02em}.drawer .plate:before{left:.25rem}.drawer .plate:after{right:.25rem}}
+@media (min-width:641px) and (max-height:640px) and (min-height:521px){.tok{font-size:clamp(1.2rem,5vh,2.2rem)}.t-sent .board{padding:.8rem .8rem .5rem}.t-sent .note{padding:.5rem .8rem}}
+@media (max-width:640px){.folder:before{font-size:.82rem;height:1.5rem;line-height:1.3rem;top:-1.4rem;padding:0 .5rem}}
+@media (max-height:520px){.tok{font-size:clamp(.95rem,5.4vh,1.45rem)}.tok .tg{font-size:.62em}}
+@media (max-width:640px) and (min-height:521px) and (max-height:700px){.folder .ico{width:min(10vmin,6.6vh)}.folder{padding-top:1rem}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Zum Inhalt</a>
+<div id="sr" class="sr" aria-live="polite"></div>
+
+<!-- ===== Startseite ===== -->
+<section id="screen-start" class="screen" aria-label="Startseite">
+  <header class="hq-top">
+    <svg class="deco l" id="deco-l" viewBox="0 0 480 230" preserveAspectRatio="xMinYMid meet" aria-hidden="true"></svg>
+    <svg class="deco r" id="deco-r" viewBox="0 0 480 230" preserveAspectRatio="xMaxYMid meet" aria-hidden="true"></svg>
+    <div class="hq-tools tools"><button class="tbtn" id="btn-sound" type="button"></button><button class="tbtn help" id="btn-help" type="button" aria-label="Hilfe zu Nomen, Verben und Adjektiven" title="Hilfe"></button></div>
+    <div class="plaque"><h1 id="title"><svg class="hat" viewBox="0 0 120 70" aria-hidden="true"><g stroke="#4a3426" stroke-width="5" stroke-linejoin="round"><ellipse cx="60" cy="48" rx="54" ry="14" fill="#c99a68"/><path d="M26 46 Q24 8 60 6 Q96 8 94 46 Q60 58 26 46z" fill="#8a5d3b"/><path d="M27 36 Q60 48 93 36 L94 46 Q60 58 26 46z" fill="#c9654b"/></g></svg>WÖRTERDETEKTIV</h1><p>Nomen, Verben &amp; Adjektive erkennen</p></div>
+  </header>
+  <main id="main" class="cases">
+    <h2><span>1</span>Wähle deinen Fall</h2>
+    <div class="folders" id="folders"></div>
+  </main>
+  <footer class="hq-desk" aria-hidden="true">
+    <svg class="deco l" id="desk-l" viewBox="0 0 520 110" preserveAspectRatio="xMinYMax meet"></svg>
+    <svg class="deco r" id="desk-r" viewBox="0 0 520 110" preserveAspectRatio="xMaxYMax meet"></svg>
+  </footer>
+</section>
+
+<!-- ===== Spielbildschirm ===== -->
+<section id="screen-game" class="screen" aria-label="Spiel" hidden>
+  <header class="gbar">
+    <button class="back" id="btn-back" type="button" aria-label="Zurück zur Auswahl"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4 L7 12 L15 20" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Auswahl</span></button>
+    <div class="ttl"><span class="fall" id="gb-fall"></span><span class="gt" id="gb-title"></span><span class="lv" id="gb-lv"></span><span class="cnt" id="gb-cnt"></span></div>
+    <div class="tools"><button class="tbtn" id="btn-sound2" type="button"></button><button class="tbtn help" id="btn-help2" type="button" aria-label="Hilfe zu Nomen, Verben und Adjektiven" title="Hilfe"></button></div>
+  </header>
+  <div class="fallakte" id="fallakte" role="group" aria-label="Fallakte"></div>
+  <div class="stage-wrap"><div id="stage" role="region" aria-label="Aufgabe"></div></div>
+  <div class="fbrow"><div id="fb" role="status" aria-live="polite"></div><button id="btn-next" class="btn pri" type="button" hidden>Weiter</button></div>
+</section>
+
+<!-- ===== Abschluss ===== -->
+<section id="screen-end" class="screen" aria-label="Fall gelöst" hidden>
+  <div class="endwrap">
+    <div id="end-stamp"></div>
+    <h2 id="end-h">Du hast alle Hinweise gefunden.</h2>
+    <div class="scene" id="end-scene"></div>
+    <div class="btns"><button id="btn-again" class="btn pri" type="button">Neuen Fall lösen</button><button id="btn-menu" class="btn" type="button">Zurück zur Auswahl</button></div>
+  </div>
+</section>
+
+<!-- ===== Dialoge ===== -->
+<div id="dlg-level" class="overlay" hidden><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="lvl-t">
+  <div class="lvl-head"><div class="ico" id="lvl-ico"></div><div><div class="pl" id="lvl-pl"></div><h2 id="lvl-t"></h2></div></div>
+  <p class="sub">Wie schwer soll dein Fall sein?</p>
+  <div class="lvls" id="lvl-btns"></div>
+  <div class="row"><button class="btn" id="lvl-cancel" type="button">Zurück</button></div>
+</div></div>
+<div id="dlg-help" class="overlay" hidden><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="help-t">
+  <h2 id="help-t">Kleine Hilfe für Wörterdetektive</h2>
+  <div class="help-grid" id="help-grid"></div>
+  <div class="row"><button class="btn pri" id="help-close" type="button">Weiter ermitteln</button></div>
+</div></div>
+<script>
+/* ===== Zentraler Wortdatensatz – WÖRTERDETEKTIV =====
+   Jeder Eintrag: word, wordType (N|V|A), difficulty (e|m|h), category, illustrationOptional
+   Nur Wörter mit eindeutiger Wortart. Nomen groß, Verben im Infinitiv, Adjektive in der Grundform. */
+const CATS = {schule:'Schule',tiere:'Tiere',zuhause:'Zuhause',freizeit:'Freizeit',natur:'Natur',bewegung:'Bewegung',gefuehle:'Gefühle',essen:'Essen',kleidung:'Kleidung',alltag:'Alltag',spiel:'Spiel',familie:'Familie'};
+/* Nomen: [Wort, Artikel, Kategorie, Stufe, Art (für Merkhilfe), Bild, Wortgruppe] */
+const RAW_N = [
+ ['Buch','das','schule','e','ding','buch'],['Stift','der','schule','e','ding','stift'],['Schule','die','schule','e','gebaeude',null,'schule'],['Heft','das','schule','e','ding'],
+ ['Tafel','die','schule','m','ding'],['Lehrerin','die','schule','m','mensch'],['Pause','die','schule','m','abstrakt'],['Schulranzen','der','schule','h','ding',null,'schule'],['Federmappe','die','schule','h','ding'],['Lineal','das','schule','h','ding'],
+ ['Hund','der','tiere','e','tier','hund'],['Katze','die','tiere','e','tier','katze'],['Hase','der','tiere','e','tier','hase'],['Vogel','der','tiere','e','tier','vogel'],['Fisch','der','tiere','e','tier','fisch'],['Maus','die','tiere','e','tier','maus'],
+ ['Pferd','das','tiere','m','tier'],['Igel','der','tiere','m','tier','igel'],['Elefant','der','tiere','m','tier','elefant'],['Schnecke','die','tiere','m','tier','schnecke'],['Schmetterling','der','tiere','h','tier','schmetterling'],['Eichhörnchen','das','tiere','h','tier'],['Krokodil','das','tiere','h','tier'],
+ ['Haus','das','zuhause','e','gebaeude','haus'],['Tisch','der','zuhause','e','ding','tisch'],['Bett','das','zuhause','e','ding','bett'],['Lampe','die','zuhause','e','ding','lampe'],['Fenster','das','zuhause','m','ding'],['Sofa','das','zuhause','m','ding'],['Schrank','der','zuhause','m','ding'],['Teppich','der','zuhause','h','ding'],['Treppe','die','zuhause','h','ding'],['Spiegel','der','zuhause','h','ding'],
+ ['Ball','der','freizeit','e','ding','ball'],['Fahrrad','das','freizeit','m','ding','fahrrad','fahr'],['Schaukel','die','freizeit','m','ding',null,'schaukel'],['Rutsche','die','freizeit','m','ding'],['Zelt','das','freizeit','m','ding'],['Drachen','der','freizeit','h','ding'],['Schwimmbad','das','freizeit','h','gebaeude',null,'schwimm'],
+ ['Baum','der','natur','e','pflanze','baum'],['Blume','die','natur','e','pflanze','blume'],['Sonne','die','natur','e','natur','sonne'],['Stern','der','natur','e','natur','stern'],['Wolke','die','natur','m','natur','wolke'],['Wald','der','natur','m','ort'],['Wiese','die','natur','m','ort'],['Pilz','der','natur','m','pflanze','pilz'],['Regenbogen','der','natur','h','natur',null,'regen'],['Gewitter','das','natur','h','natur'],
+ ['Apfel','der','essen','e','essen','apfel'],['Brot','das','essen','e','essen','brot'],['Eis','das','essen','e','essen','eis'],['Banane','die','essen','m','essen','banane'],['Kuchen','der','essen','m','essen'],['Suppe','die','essen','m','essen'],['Marmelade','die','essen','h','essen'],['Karotte','die','essen','h','essen'],
+ ['Mütze','die','kleidung','e','ding','muetze'],['Hose','die','kleidung','e','ding','hose'],['Schuh','der','kleidung','e','ding','schuh'],['Jacke','die','kleidung','m','ding'],['Schal','der','kleidung','m','ding'],['Handschuh','der','kleidung','h','ding'],['Stiefel','der','kleidung','h','ding'],
+ ['Uhr','die','alltag','e','ding','uhr'],['Tasche','die','alltag','m','ding'],['Schlüssel','der','alltag','m','ding','schluessel'],['Zahnbürste','die','alltag','h','ding'],['Brief','der','alltag','h','ding'],['Regenschirm','der','alltag','h','ding','regenschirm','regen'],
+ ['Puzzle','das','spiel','m','ding'],['Würfel','der','spiel','m','ding'],['Roller','der','spiel','m','ding'],['Spielplatz','der','spiel','h','ort',null,'spiel'],['Murmel','die','spiel','h','ding'],
+ ['Mutter','die','familie','e','mensch'],['Vater','der','familie','e','mensch'],['Oma','die','familie','e','mensch'],['Opa','der','familie','e','mensch'],['Bruder','der','familie','m','mensch'],['Schwester','die','familie','m','mensch'],['Freundin','die','familie','m','mensch'],['Onkel','der','familie','h','mensch'],['Tante','die','familie','h','mensch'],['Geschwister','die','familie','h','mensch'],
+ ['Freude','die','gefuehle','m','abstrakt',null,'freu'],['Spaß','der','gefuehle','m','abstrakt'],['Mut','der','gefuehle','h','abstrakt',null,'mut'],['Glück','das','gefuehle','h','abstrakt',null,'glueck']
+];
+/* Verben: [Wort, Kategorie, Stufe, Art (tun|vorgang), Bild, Wortgruppe] */
+const RAW_V = [
+ ['laufen','bewegung','e','tun','laufen'],['springen','bewegung','e','tun','springen'],['rennen','bewegung','e','tun'],['hüpfen','bewegung','e','tun'],['schwimmen','bewegung','e','tun','schwimmen','schwimm'],['fahren','bewegung','e','tun','fahren','fahr'],['tanzen','bewegung','e','tun','tanzen'],['fliegen','natur','e','tun'],
+ ['klettern','bewegung','m','tun'],['werfen','spiel','m','tun','werfen'],['fangen','spiel','m','tun'],['wandern','bewegung','m','tun'],['rutschen','freizeit','m','tun'],['schaukeln','freizeit','m','tun',null,'schaukel'],['turnen','bewegung','m','tun'],['reiten','freizeit','m','tun'],
+ ['schleichen','bewegung','h','tun'],['stolpern','bewegung','h','tun'],['krabbeln','bewegung','h','tun'],
+ ['lesen','schule','e','tun','lesen'],['schreiben','schule','e','tun'],['malen','schule','e','tun','malen'],['lernen','schule','e','tun'],['rechnen','schule','m','tun'],['zählen','schule','m','tun'],['zeichnen','schule','m','tun'],['üben','schule','m','tun'],['buchstabieren','schule','h','tun'],
+ ['schlafen','alltag','e','tun','schlafen'],['kochen','zuhause','m','tun'],['backen','zuhause','m','tun'],['putzen','zuhause','m','tun'],['waschen','alltag','m','tun'],['wohnen','zuhause','m','tun'],['träumen','alltag','m','tun'],['öffnen','alltag','h','tun'],['schließen','alltag','h','tun'],['gießen','zuhause','h','tun'],
+ ['lachen','gefuehle','e','tun','lachen'],['weinen','gefuehle','e','tun','weinen'],['singen','gefuehle','e','tun','singen'],['rufen','gefuehle','m','tun'],['fragen','alltag','m','tun'],['lächeln','gefuehle','m','tun'],['winken','gefuehle','m','tun','winken'],['flüstern','gefuehle','h','tun'],['antworten','alltag','h','tun'],['erzählen','familie','h','tun'],['staunen','gefuehle','h','tun'],
+ ['essen','essen','e','tun','essen'],['trinken','essen','e','tun'],['naschen','essen','h','tun'],['schmecken','essen','m','tun'],
+ ['spielen','spiel','e','tun',null,'spiel'],['bauen','spiel','e','tun'],['suchen','spiel','e','tun'],['basteln','freizeit','m','tun'],['sammeln','freizeit','m','tun'],['finden','spiel','m','tun'],['pfeifen','freizeit','h','tun'],
+ ['sehen','alltag','e','tun'],['hören','alltag','e','tun'],['riechen','alltag','m','tun'],
+ ['regnen','natur','m','vorgang',null,'regen'],['schneien','natur','m','vorgang'],['scheinen','natur','m','vorgang'],['blühen','natur','h','vorgang'],['wachsen','natur','h','vorgang'],['leuchten','natur','h','vorgang']
+];
+/* Adjektive: [Wort, Kategorie, Stufe, Bezug (person|sache|beides), Bild, Wortgruppe] */
+const RAW_A = [
+ ['groß','alltag','e','beides'],['klein','alltag','e','beides'],['schnell','bewegung','e','beides'],['langsam','bewegung','e','beides'],['laut','alltag','e','beides'],['leise','alltag','e','beides'],['warm','natur','e','sache'],['kalt','natur','e','sache'],
+ ['lustig','gefuehle','e','beides'],['traurig','gefuehle','e','person'],['müde','gefuehle','e','person'],['nett','gefuehle','e','person'],['lang','alltag','e','beides'],['kurz','alltag','e','beides'],['dick','alltag','e','beides'],['rund','alltag','e','sache'],['nass','natur','e','sache'],['neu','alltag','e','sache'],['alt','alltag','e','beides'],['bunt','kleidung','e','sache'],
+ ['rot','kleidung','e','sache'],['blau','kleidung','e','sache'],['gelb','kleidung','e','sache'],['grün','natur','e','sache'],['lecker','essen','e','sache'],['süß','essen','e','sache'],['stark','tiere','e','beides'],
+ ['fröhlich','gefuehle','m','person'],['mutig','gefuehle','m','person',null,'mut'],['schlau','schule','m','person'],['freundlich','familie','m','person'],['dünn','alltag','m','beides'],['hoch','natur','m','sache'],['tief','natur','m','sache'],['eckig','spiel','m','sache'],['weich','zuhause','m','sache'],['hart','zuhause','m','sache'],['sonnig','natur','m','sache'],['windig','natur','m','sache'],['sauber','zuhause','m','sache'],['voll','alltag','m','sache'],['leer','alltag','m','sache'],['jung','familie','m','person'],['hell','zuhause','m','sache'],['dunkel','natur','m','sache'],['braun','tiere','m','sache'],['sauer','essen','m','sache'],['frisch','essen','m','sache'],['gesund','essen','m','beides'],['krank','familie','m','person'],['ruhig','gefuehle','m','beides'],['fleißig','schule','m','person'],['brav','schule','m','person'],['hungrig','essen','m','person'],['durstig','essen','m','person'],['glücklich','gefuehle','m','person',null,'glueck'],
+ ['frech','gefuehle','h','person'],['breit','alltag','h','sache'],['schmal','alltag','h','sache'],['spitz','spiel','h','sache'],['glatt','zuhause','h','sache'],['schmutzig','zuhause','h','sache'],['saftig','essen','h','sache'],['knusprig','essen','h','sache'],['schwach','tiere','h','beides'],['wild','tiere','h','beides'],['gemütlich','zuhause','h','sache'],['ordentlich','schule','h','person'],['wichtig','alltag','h','sache'],['neugierig','gefuehle','h','person'],['geduldig','gefuehle','h','person'],['ehrlich','gefuehle','h','person'],['friedlich','gefuehle','h','beides'],['kräftig','tiere','h','beides'],['vorsichtig','bewegung','h','person'],['flauschig','tiere','h','sache'],['riesig','tiere','h','beides'],['winzig','tiere','h','beides']
+];
+const WORDS = [];
+RAW_N.forEach(r=>WORDS.push({word:r[0],wordType:'N',art:r[1],category:r[2],difficulty:r[3],sub:r[4],illustrationOptional:r[5]||null,group:r[6]||null}));
+RAW_V.forEach(r=>WORDS.push({word:r[0],wordType:'V',category:r[1],difficulty:r[2],sub:r[3],illustrationOptional:r[4]||null,group:r[5]||null}));
+RAW_A.forEach(r=>WORDS.push({word:r[0],wordType:'A',category:r[1],difficulty:r[2],sub:r[3],illustrationOptional:r[4]||null,group:r[5]||null}));
+WORDS.forEach((w,i)=>{ w.id='w'+i; });
+const WORD_BY_TEXT = {}; WORDS.forEach(w=>{ WORD_BY_TEXT[w.word]=w; });
+const WORD_BY_ID = {}; WORDS.forEach(w=>{ WORD_BY_ID[w.id]=w; });
+/* ===== Satzmaterial =====
+   Markierung: /N Nomen, /V Verb, /A Adjektiv. Alle anderen Wörter (Artikel, Pronomen, Wörter wie „und“, „im“)
+   gehören zu keiner der drei Wortarten. Keine Eigennamen, keine trennbaren Verben, keine zusammengesetzten Zeiten,
+   keine Adverbien wie „heute“ oder „gern“ – damit jede Markierung eindeutig bleibt. */
+const RAW_S = [
+ /* ---- leicht: sehr kurz ---- */
+ ['Der Hund/N bellt/V.','tiere','e'],['Die Katze/N schläft/V.','tiere','e'],['Das Kind/N lacht/V.','familie','e'],['Der Vogel/N fliegt/V.','tiere','e'],
+ ['Die Sonne/N scheint/V.','natur','e'],['Ich lese/V ein Buch/N.','schule','e'],['Der Hase/N hüpft/V.','tiere','e'],['Wir malen/V ein Bild/N.','schule','e'],
+ ['Die Blume/N ist/V schön/A.','natur','e'],['Das Eis/N ist/V kalt/A.','essen','e'],['Der Elefant/N ist/V groß/A.','tiere','e'],['Die Maus/N ist/V klein/A.','tiere','e'],
+ ['Der Schnee/N ist/V weiß/A.','natur','e'],['Die Suppe/N ist/V heiß/A.','essen','e'],['Der Fisch/N schwimmt/V.','tiere','e'],['Die Kinder/N spielen/V.','spiel','e'],
+ ['Ich trinke/V Milch/N.','essen','e'],['Das Baby/N schläft/V.','familie','e'],['Der Hund/N ist/V müde/A.','tiere','e'],['Das Auto/N fährt/V.','alltag','e'],
+ ['Die Uhr/N tickt/V.','alltag','e'],['Der Regen/N fällt/V.','natur','e'],['Die Katze/N ist/V weich/A.','tiere','e'],['Ein Vogel/N singt/V.','tiere','e'],
+ ['Das Wasser/N ist/V nass/A.','natur','e'],['Der Apfel/N ist/V rot/A.','essen','e'],['Die Oma/N backt/V einen Kuchen/N.','familie','e'],['Der Junge/N rennt/V.','bewegung','e'],
+ ['Das Mädchen/N tanzt/V.','bewegung','e'],['Der Ball/N ist/V rund/A.','spiel','e'],
+ /* ---- mittel ---- */
+ ['Der kleine/A Hund/N rennt/V schnell/A.','tiere','m'],['Die Kinder/N spielen/V im Garten/N.','spiel','m'],['Mein Bruder/N liest/V ein spannendes/A Buch/N.','familie','m'],
+ ['Die Lehrerin/N schreibt/V ein Wort/N an die Tafel/N.','schule','m'],['Das Mädchen/N trägt/V eine rote/A Mütze/N.','kleidung','m'],['Der Junge/N fährt/V mit dem Fahrrad/N.','bewegung','m'],
+ ['Die Katze/N trinkt/V frische/A Milch/N.','tiere','m'],['Der Vogel/N singt/V ein fröhliches/A Lied/N.','tiere','m'],['Die Blumen/N blühen/V im Garten/N.','natur','m'],
+ ['Wir essen/V einen saftigen/A Apfel/N.','essen','m'],['Der Opa/N erzählt/V eine lustige/A Geschichte/N.','familie','m'],['Der Schnee/N ist/V weiß/A und kalt/A.','natur','m'],
+ ['Die Mutter/N backt/V einen leckeren/A Kuchen/N.','essen','m'],['Ein großer/A Hund/N bellt/V laut/A.','tiere','m'],['Das Kind/N malt/V ein buntes/A Bild/N.','schule','m'],
+ ['Der Hase/N hüpft/V über die Wiese/N.','tiere','m'],['Die Kinder/N lachen/V und singen/V.','gefuehle','m'],['Ich sehe/V einen bunten/A Schmetterling/N.','natur','m'],
+ ['Die Schüler/N rechnen/V leise/A.','schule','m'],['Unser Hund/N schläft/V auf dem Sofa/N.','zuhause','m'],['Die Oma/N strickt/V einen warmen/A Schal/N.','kleidung','m'],
+ ['Der Bus/N hält/V vor der Schule/N.','alltag','m'],['Das Baby/N lächelt/V und winkt/V.','familie','m'],['Der Wind/N weht/V kalt/A.','natur','m'],
+ ['Im Zimmer/N brennt/V eine helle/A Lampe/N.','zuhause','m'],['Mein Vater/N kocht/V eine heiße/A Suppe/N.','familie','m'],['Das Eichhörnchen/N klettert/V auf den Baum/N.','tiere','m'],
+ ['Die Sonne/N scheint/V warm/A.','natur','m'],['Der Lehrer/N lobt/V die fleißigen/A Kinder/N.','schule','m'],
+ /* ---- schwer: länger, mehrere Wortarten ---- */
+ ['Der kleine/A Igel/N krabbelt/V langsam/A durch das dichte/A Laub/N.','tiere','h'],
+ ['Die Kinder/N bauen/V eine hohe/A Burg/N aus nassem/A Sand/N.','spiel','h'],
+ ['Die neugierige/A Katze/N schleicht/V leise/A um den Tisch/N.','tiere','h'],
+ ['Mein kleiner/A Bruder/N sammelt/V bunte/A Steine/N am Strand/N.','familie','h'],
+ ['Im Garten/N blühen/V gelbe/A Blumen/N und rote/A Tulpen/N.','natur','h'],
+ ['Der freundliche/A Lehrer/N erklärt/V den Kindern/N eine schwere/A Aufgabe/N.','schule','h'],
+ ['Die Kinder/N laufen/V durch den dunklen/A Wald/N und rufen/V laut/A.','natur','h'],
+ ['Ein starker/A Wind/N bläst/V die bunten/A Blätter/N vom Baum/N.','natur','h'],
+ ['Die fleißige/A Biene/N sammelt/V süßen/A Honig/N in ihrem Bienenstock/N.','tiere','h'],
+ ['Der Bäcker/N backt/V frisches/A Brot/N und leckere/A Brötchen/N.','essen','h'],
+ ['Das müde/A Mädchen/N gähnt/V und kuschelt/V sich in das weiche/A Bett/N.','zuhause','h'],
+ ['Wir wandern/V durch den grünen/A Wald/N und hören/V die Vögel/N.','natur','h'],
+ ['Der mutige/A Feuerwehrmann/N klettert/V auf die lange/A Leiter/N.','alltag','h'],
+ ['Die Oma/N strickt/V einen warmen/A Schal/N für den kalten/A Winter/N.','kleidung','h'],
+ ['Der graue/A Fuchs/N schleicht/V leise/A zum alten/A Hühnerstall/N.','tiere','h'],
+ ['Das Eichhörnchen/N klettert/V flink/A auf den hohen/A Baum/N.','tiere','h'],
+ ['Die Schüler/N lesen/V ein spannendes/A Buch/N und schreiben/V neue/A Wörter/N in ihr Heft/N.','schule','h'],
+ ['Ein dicker/A Regentropfen/N fällt/V auf die trockene/A Erde/N.','natur','h'],
+ ['Der Hund/N holt/V den roten/A Ball/N und wedelt/V fröhlich/A.','tiere','h'],
+ ['Meine Mutter/N kocht/V eine heiße/A Suppe/N für die hungrigen/A Kinder/N.','familie','h'],
+ ['Auf dem Tisch/N liegt/V ein kleiner/A Schlüssel/N.','alltag','h'],
+ ['Die Sonne/N scheint/V warm/A auf die grüne/A Wiese/N.','natur','h'],
+ ['Das Fahrrad/N von meinem Opa/N ist/V alt/A und rostig/A.','familie','h'],
+ ['Der Detektiv/N sucht/V eine kleine/A Spur/N im weichen/A Sand/N.','spiel','h'],
+ ['Die Kinder/N bauen/V ein großes/A Zelt/N im Garten/N.','freizeit','h'],
+ ['Ein bunter/A Drachen/N fliegt/V über das weite/A Feld/N.','freizeit','h'],
+ ['Die Bäckerin/N verkauft/V frische/A Brötchen/N an die Kunden/N.','essen','h'],
+ ['Im Stall/N frisst/V das braune/A Pferd/N saftiges/A Heu/N.','tiere','h'],
+ ['Der alte/A Mann/N füttert/V die hungrigen/A Enten/N im Teich/N.','tiere','h'],
+ ['Meine Freundin/N schenkt/V mir ein kleines/A Päckchen/N zum Geburtstag/N.','familie','h']
+];
+/* ===== Lückenaufgaben (Modus 5) =====
+   [Satz mit ___, gesuchte Wortart, richtige Option, zwei Ablenker (jeweils andere Wortarten, in der Lücke ungrammatisch), Kategorie, Stufe, offen?]
+   offen = true: die Wortart wird in der Aufgabe nicht genannt (nur Stufe schwer). */
+const RAW_G = [
+ /* leicht – Wortart wird genannt */
+ ['Der Hase ist ___.','A','schnell','Hase','hoppeln','tiere','e'],
+ ['Das Eis ist ___.','A','kalt','Löffel','essen','essen','e'],
+ ['Die Sonne ist ___.','A','warm','Sonne','scheinen','natur','e'],
+ ['Der Elefant ist ___.','A','groß','Rüssel','trinken','tiere','e'],
+ ['Die Maus ist ___.','A','klein','Käse','fressen','tiere','e'],
+ ['Der Hund ___.','V','bellt','Knochen','müde','tiere','e'],
+ ['Das Kind ___ ein Lied.','V','singt','Ohr','laut','gefuehle','e'],
+ ['Die Katze ___ auf dem Sofa.','V','schläft','Decke','weich','zuhause','e'],
+ ['Der Vogel ___ in der Luft.','V','fliegt','Flügel','leicht','tiere','e'],
+ ['Ich lese ein ___.','N','Buch','lesen','spannend','schule','e'],
+ ['Wir spielen mit dem ___.','N','Ball','werfen','rund','spiel','e'],
+ ['Die Mutter backt einen ___.','N','Kuchen','backen','lecker','essen','e'],
+ ['Der Schnee ist ___.','A','weiß','Winter','fallen','natur','e'],
+ ['Das Mädchen ___ ein Bild.','V','malt','Farbe','bunt','schule','e'],
+ ['Ich esse einen ___ Apfel.','A','roten','Garten','rennen','essen','e'],
+ /* mittel – Wortart wird genannt */
+ ['Die ___ Katze schläft auf dem Sofa.','A','kleine','Schüssel','laufen','tiere','m'],
+ ['Der Junge ___ mit dem Fahrrad.','V','fährt','Straße','schnell','bewegung','m'],
+ ['Die Lehrerin ___ ein Wort an die Tafel.','V','schreibt','Kreide','weiß','schule','m'],
+ ['Am Morgen scheint die ___.','N','Sonne','leuchten','hell','natur','m'],
+ ['Der ___ Igel krabbelt durch das Laub.','A','kleine','Stachel','suchen','tiere','m'],
+ ['Die Kinder ___ im Garten.','V','spielen','Wiese','fröhlich','spiel','m'],
+ ['Mein Bruder trägt eine ___ Mütze.','A','warme','Wolle','frieren','kleidung','m'],
+ ['Der Bäcker backt frisches ___.','N','Brot','backen','knusprig','essen','m'],
+ ['Die ___ Blume blüht im Garten.','A','gelbe','Biene','gießen','natur','m'],
+ ['Das Baby ___ im Bett.','V','schläft','Kissen','müde','familie','m'],
+ ['Im Zoo sehen wir einen großen ___.','N','Elefanten','laufen','grau','tiere','m'],
+ ['Die Suppe ist sehr ___.','A','heiß','Topf','kochen','essen','m'],
+ ['Der Opa ___ eine lustige Geschichte.','V','erzählt','Buch','lustig','familie','m'],
+ ['Nach dem Regen ist die Wiese ___.','A','nass','Pfütze','trocknen','natur','m'],
+ ['Wir bauen ein ___ aus Sand.','N','Schloss','graben','nass','spiel','m'],
+ /* schwer – Wortart wird genannt */
+ ['Der ___ Feuerwehrmann klettert auf die lange Leiter.','A','mutige','Helm','retten','alltag','h'],
+ ['Die Kinder ___ im Wald nach einer kleinen Spur.','V','suchen','Pfad','neugierig','natur','h'],
+ ['Im Herbst fallen die bunten ___ von den Bäumen.','N','Blätter','färben','herbstlich','natur','h'],
+ ['Das ___ Eichhörnchen sammelt Nüsse für den Winter.','A','fleißige','Vorrat','klettern','tiere','h'],
+ ['Die Oma ___ einen warmen Schal für den Winter.','V','strickt','Wolle','kuschelig','kleidung','h'],
+ ['Der Hund wedelt ___ mit dem Schwanz.','A','fröhlich','Freude','springen','tiere','h'],
+ ['Die Lehrerin erklärt den Kindern eine ___ Aufgabe.','A','schwere','Pause','rechnen','schule','h'],
+ ['Am Abend ___ der Mond hell am Himmel.','V','leuchtet','Nacht','dunkel','natur','h'],
+ ['Die ___ Biene sammelt süßen Honig.','A','winzige','Blüte','summen','tiere','h'],
+ ['Ein starker Wind ___ die Blätter vom Baum.','V','bläst','Sturm','kräftig','natur','h'],
+ ['Der Bäcker verkauft frische ___.','N','Brötchen','backen','warm','essen','h'],
+ /* schwer – offen: Wortart steht nicht dabei, die Lücke legt sie eindeutig fest */
+ ['Die ___ Katze schleicht leise um den Tisch.','A','neugierige','Mäuse','schleichen','tiere','h','offen'],
+ ['Wir wandern durch den ___ Wald.','A','dunklen','Weg','laufen','natur','h','offen'],
+ ['Der Bäcker ___ jeden Morgen frisches Brot.','V','backt','Mehl','knusprig','essen','h','offen'],
+ ['Die Kinder ___ ein großes Zelt im Garten.','V','bauen','Hammer','fleißig','freizeit','h','offen'],
+ ['Meine Schwester hat eine ___ Mütze.','A','rote','Wolle','stricken','kleidung','h','offen'],
+ ['Der Lehrer lobt die ___ Kinder.','A','fleißigen','Heft','lernen','schule','h','offen'],
+ ['Im Garten blühen gelbe ___.','N','Blumen','gießen','duftend','natur','h','offen'],
+ ['Der Hund holt den roten ___.','N','Ball','werfen','schnell','tiere','h','offen'],
+ ['Die Sonne ___ warm auf die grüne Wiese.','V','scheint','Strahl','golden','natur','h','offen'],
+ ['Der alte Mann ___ die hungrigen Enten.','V','füttert','Brot','sanft','tiere','h','offen']
+];
+/* ===== Bildaufgaben (Modus 5) ===== */
+/* Verb-Szenen: Das Bild zeigt eindeutig, was das Kind tut. nouns = auf dem Bild sichtbare Dinge (werden nicht als Ablenker angeboten),
+   noAdj = Adjektive, die zum Bild passen würden (werden nicht als Ablenker angeboten) */
+const VERB_SCENES = [
+ {verb:'laufen',pic:'s_laufen',d:'e',nouns:[],noAdj:['schnell','eilig']},
+ {verb:'springen',pic:'s_springen',d:'e',nouns:[],noAdj:['fröhlich','hoch']},
+ {verb:'schlafen',pic:'s_schlafen',d:'e',nouns:['Bett'],noAdj:['müde','ruhig']},
+ {verb:'lesen',pic:'s_lesen',d:'e',nouns:['Buch'],noAdj:['ruhig']},
+ {verb:'malen',pic:'s_malen',d:'e',nouns:['Bild'],noAdj:['bunt']},
+ {verb:'lachen',pic:'s_lachen',d:'e',nouns:[],noAdj:['fröhlich','lustig','glücklich']},
+ {verb:'schwimmen',pic:'s_schwimmen',d:'e',nouns:[],noAdj:['nass']},
+ {verb:'singen',pic:'s_singen',d:'e',nouns:[],noAdj:['laut','fröhlich']},
+ {verb:'tanzen',pic:'s_tanzen',d:'m',nouns:[],noAdj:['fröhlich']},
+ {verb:'essen',pic:'s_essen',d:'e',nouns:['Apfel','Tisch'],noAdj:['hungrig','lecker','rot']},
+ {verb:'fahren',pic:'s_fahren',d:'e',nouns:['Fahrrad'],noAdj:['schnell']},
+ {verb:'winken',pic:'s_winken',d:'m',nouns:[],noAdj:['fröhlich','freundlich','nett']},
+ {verb:'werfen',pic:'s_werfen',d:'m',nouns:['Ball'],noAdj:['rund','rot']},
+ {verb:'weinen',pic:'s_weinen',d:'m',nouns:[],noAdj:['traurig']}
+];
+/* Adjektiv-Bilder: Das Bild zeigt eindeutig die Eigenschaft. noun = abgebildetes Nomen (Wort steht als Option) */
+const ADJ_PICS = [
+ {adj:'groß',pic:'elefant',noun:'Elefant',art:'der',d:'e'},
+ {adj:'klein',pic:'maus',noun:'Maus',art:'die',d:'e'},
+ {adj:'schnell',pic:'hase_schnell',noun:'Hase',art:'der',d:'e'},
+ {adj:'langsam',pic:'schnecke',noun:'Schnecke',art:'die',d:'e'},
+ {adj:'kalt',pic:'schneemann',noun:'Schneemann',art:'der',d:'e'},
+ {adj:'warm',pic:'tasse',noun:'Tasse',art:'die',d:'e'},
+ {adj:'rund',pic:'ball',noun:'Ball',art:'der',d:'e'},
+ {adj:'fröhlich',pic:'kind_froehlich',noun:'Kind',art:'das',d:'e'},
+ {adj:'traurig',pic:'kind_traurig',noun:'Kind',art:'das',d:'e'},
+ {adj:'gelb',pic:'banane',noun:'Banane',art:'die',d:'e'},
+ {adj:'rot',pic:'apfel',noun:'Apfel',art:'der',d:'e'},
+ {adj:'müde',pic:'kind_muede',noun:'Kind',art:'das',d:'m'},
+ {adj:'nass',pic:'regenschirm_regen',noun:'Regenschirm',art:'der',d:'m'},
+ {adj:'hell',pic:'lampe_hell',noun:'Lampe',art:'die',d:'m'},
+ {adj:'sauer',pic:'zitrone',noun:'Zitrone',art:'die',d:'m'},
+ {adj:'bunt',pic:'schmetterling',noun:'Schmetterling',art:'der',d:'m'}
+];
+/* ===== Eigene SVG-Bilder (viewBox 0 0 120 100), einheitlicher Buntstift-Stil ===== */
+const INK='#4a3426', CRM='#fbf3df', TAN='#e8d3a8', SAGE='#9bb59a', SAGED='#6f8f70', PET='#3f6e73', PETL='#8fb4b3', TERRA='#c9654b', TERRAL='#e49a82', ROSE='#dba0a0', MUST='#e2ac3a', BRN='#8a5d3b', BRNL='#c99a68', SKIN='#f2c9a0', WHT='#fffaf0', GREY='#b9b3a6';
+const limb=(pts,col,w)=>{ const d='M'+pts.map(p=>p.join(' ')).join(' L'); return `<path d="${d}" fill="none" stroke="${INK}" stroke-width="${w+3.4}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`; };
+const dot=(x,y,r,f=INK)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${f}" stroke="none"/>`;
+const ART = {};
+/* ---------- Tiere ---------- */
+ART.hund = `<path d="M26 62 Q10 54 14 36" fill="none" stroke="${INK}" stroke-width="10"/><path d="M26 62 Q10 54 14 36" fill="none" stroke="${BRN}" stroke-width="5.5"/>
+<rect x="28" y="72" width="15" height="18" rx="6" fill="${BRNL}"/><rect x="60" y="72" width="14" height="18" rx="6" fill="${BRNL}"/>
+<ellipse cx="52" cy="64" rx="27" ry="19" fill="${BRNL}"/><circle cx="80" cy="42" r="16" fill="${BRNL}"/>
+<path d="M70 28 Q58 30 62 50 Q74 50 78 36z" fill="${BRN}"/><ellipse cx="94" cy="48" rx="10" ry="7.5" fill="#f0d9b5"/>
+<circle cx="102" cy="45" r="3.2" fill="${INK}" stroke="none"/>${dot(85,38,2.5)}<path d="M92 54 Q97 58 101 53" fill="none"/>
+<path d="M68 56 Q80 66 90 56" fill="none" stroke="${TERRA}" stroke-width="4.5"/>`;
+ART.katze = `<path d="M82 84 Q108 86 104 60" fill="none" stroke="${INK}" stroke-width="11"/><path d="M82 84 Q108 86 104 60" fill="none" stroke="#e2a86a" stroke-width="6"/>
+<ellipse cx="58" cy="70" rx="25" ry="23" fill="#e2a86a"/><ellipse cx="46" cy="90" rx="9" ry="5" fill="#f3d3a6"/><ellipse cx="70" cy="90" rx="9" ry="5" fill="#f3d3a6"/>
+<path d="M42 30 L42 8 L58 20z" fill="#e2a86a"/><path d="M78 30 L78 8 L62 20z" fill="#e2a86a"/><path d="M45 24 L45 14 L53 20z" fill="${ROSE}" stroke="none"/><path d="M75 24 L75 14 L67 20z" fill="${ROSE}" stroke="none"/>
+<circle cx="60" cy="38" r="20" fill="#e2a86a"/><path d="M50 22 L52 29 M60 20 V28 M70 22 L68 29" fill="none" stroke="#b97d3f" stroke-width="3"/>
+<ellipse cx="52" cy="38" rx="3" ry="4" fill="${INK}" stroke="none"/><ellipse cx="68" cy="38" rx="3" ry="4" fill="${INK}" stroke="none"/><path d="M57 45 L63 45 L60 49z" fill="${ROSE}" stroke-width="1.6"/><path d="M60 49 Q56 53 52 50 M60 49 Q64 53 68 50" fill="none" stroke-width="1.8"/>
+<path d="M40 44 L28 42 M40 48 L28 50 M80 44 L92 42 M80 48 L92 50" fill="none" stroke-width="1.4"/><path d="M44 62 Q58 70 72 62" fill="none" stroke="#b97d3f" stroke-width="3"/>`;
+ART.hase = `<ellipse cx="58" cy="70" rx="26" ry="22" fill="#efe9de"/><circle cx="86" cy="76" r="8" fill="${WHT}"/>
+<ellipse cx="46" cy="90" rx="10" ry="5" fill="#efe9de"/><ellipse cx="68" cy="90" rx="10" ry="5" fill="#efe9de"/>
+<ellipse cx="48" cy="20" rx="7" ry="19" fill="#efe9de" transform="rotate(-10 48 20)"/><ellipse cx="72" cy="20" rx="7" ry="19" fill="#efe9de" transform="rotate(10 72 20)"/>
+<ellipse cx="48" cy="21" rx="3.2" ry="13" fill="${ROSE}" stroke="none" transform="rotate(-10 48 21)"/><ellipse cx="72" cy="21" rx="3.2" ry="13" fill="${ROSE}" stroke="none" transform="rotate(10 72 21)"/>
+<circle cx="60" cy="46" r="18" fill="#efe9de"/>${dot(53,43,2.6)}${dot(67,43,2.6)}<path d="M57 50 L63 50 L60 54z" fill="${ROSE}" stroke-width="1.6"/><path d="M60 54 Q56 58 53 55 M60 54 Q64 58 67 55" fill="none" stroke-width="1.8"/>
+<path d="M44 50 L32 48 M44 54 L32 56 M76 50 L88 48 M76 54 L88 56" fill="none" stroke-width="1.4"/>`;
+ART.vogel = `<path d="M36 56 L8 44 L10 64 L34 66z" fill="${PET}"/><path d="M52 76 V90 M64 76 V90 M46 90 H56 M58 90 H70" fill="none" stroke="${BRN}" stroke-width="3"/>
+<ellipse cx="58" cy="58" rx="27" ry="21" fill="#5b8f94"/><ellipse cx="62" cy="64" rx="17" ry="12" fill="#cfe0dd" stroke="none"/><circle cx="84" cy="38" r="14" fill="#5b8f94"/>
+<path d="M96 33 L112 39 L96 45z" fill="${MUST}"/>${dot(86,35,3)}<path d="M40 54 Q58 40 76 56 Q58 70 40 54z" fill="${PET}"/>`;
+ART.fisch = `<path d="M88 50 L114 30 L114 70z" fill="#d97b5c"/><ellipse cx="56" cy="50" rx="36" ry="22" fill="#e48b6f"/><path d="M44 30 Q56 12 70 30z" fill="#d97b5c"/><path d="M44 70 Q54 80 62 70z" fill="#d97b5c"/>
+<circle cx="34" cy="44" r="6" fill="${WHT}"/>${dot(33,44,3)}<path d="M46 36 Q54 50 46 64" fill="none"/><path d="M60 40 q5 4 0 8 M70 46 q5 4 0 8 M62 54 q5 4 0 8" fill="none" stroke-width="1.6"/>
+<circle cx="14" cy="38" r="4" fill="#dff0ef" stroke-width="1.6"/><circle cx="8" cy="26" r="2.6" fill="#dff0ef" stroke-width="1.4"/>`;
+ART.maus = `<path d="M34 76 Q12 84 16 62 Q18 52 8 54" fill="none" stroke="${INK}" stroke-width="7"/><path d="M34 76 Q12 84 16 62 Q18 52 8 54" fill="none" stroke="${ROSE}" stroke-width="3"/>
+<ellipse cx="58" cy="68" rx="26" ry="18" fill="#c4bdb0"/><ellipse cx="46" cy="87" rx="8" ry="4" fill="#d9d3c6"/><ellipse cx="68" cy="87" rx="8" ry="4" fill="#d9d3c6"/>
+<circle cx="80" cy="38" r="10" fill="#c4bdb0"/><circle cx="80" cy="38" r="5.5" fill="${ROSE}" stroke="none"/><circle cx="96" cy="42" r="10" fill="#c4bdb0"/><circle cx="96" cy="42" r="5.5" fill="${ROSE}" stroke="none"/>
+<ellipse cx="88" cy="58" rx="16" ry="13" fill="#c4bdb0"/>${dot(93,54,2.4)}<circle cx="102" cy="60" r="3.4" fill="${ROSE}"/><path d="M96 62 L110 58 M96 64 L110 66" fill="none" stroke-width="1.3"/>`;
+ART.elefant = `<rect x="22" y="70" width="17" height="20" rx="6" fill="#a9b4b5"/><rect x="46" y="72" width="17" height="18" rx="6" fill="#a9b4b5"/><rect x="62" y="72" width="17" height="18" rx="6" fill="#a9b4b5"/>
+<path d="M18 60 Q10 62 12 76" fill="none" stroke-width="3"/><ellipse cx="48" cy="56" rx="36" ry="26" fill="#a9b4b5"/><rect x="22" y="70" width="17" height="20" rx="6" fill="#a9b4b5"/>
+<circle cx="88" cy="42" r="19" fill="#a9b4b5"/><ellipse cx="74" cy="46" rx="11" ry="17" fill="#8e9a9c"/>
+<path d="M100 50 Q114 56 110 76 Q108 86 100 84" fill="none" stroke="${INK}" stroke-width="14"/><path d="M100 50 Q114 56 110 76 Q108 86 100 84" fill="none" stroke="#a9b4b5" stroke-width="9.5"/>
+<path d="M94 58 Q100 66 94 70" fill="${WHT}" stroke-width="2.2"/>${dot(90,36,3)}`;
+(function(){ let sp=''; for(let a=200;a<=340;a+=12){ const r=a*Math.PI/180; const x1=56+34*Math.cos(r), y1=72+34*Math.sin(r), x2=56+47*Math.cos(r), y2=72+47*Math.sin(r); sp+=`M${x1.toFixed(1)} ${y1.toFixed(1)} L${x2.toFixed(1)} ${y2.toFixed(1)} `; }
+ART.igel = `<ellipse cx="44" cy="88" rx="9" ry="4" fill="${BRN}"/><ellipse cx="72" cy="88" rx="9" ry="4" fill="${BRN}"/><path d="${sp}" fill="none" stroke="${INK}" stroke-width="3"/>
+<path d="M20 74 Q20 32 58 32 Q94 32 94 74z" fill="${BRN}"/><path d="M34 62 L40 50 M50 58 L54 44 M66 58 L70 44 M80 62 L84 50 M30 70 L36 58" fill="none" stroke="${BRNL}" stroke-width="2.4"/>
+<ellipse cx="94" cy="68" rx="18" ry="13" fill="#f0d9b5"/><circle cx="110" cy="68" r="4" fill="${INK}"/>${dot(98,61,2.6)}<path d="M94 74 Q100 78 106 74" fill="none" stroke-width="1.8"/>`; })();
+ART.schnecke = `<path d="M10 84 Q60 94 104 84 L104 74 Q92 66 84 52 Q80 60 70 74 L16 74z" fill="#e7cfa0"/><path d="M96 70 Q104 60 100 46" fill="none" stroke="${INK}" stroke-width="3"/><path d="M104 74 Q114 64 114 50" fill="none" stroke="${INK}" stroke-width="3"/>${dot(100,44,3.6)}${dot(114,48,3.6)}
+<circle cx="46" cy="52" r="28" fill="#d98a5f"/><path d="M46 52 m0 0 a4 4 0 1 1 4 4 a9 9 0 1 1 -9 -9 a15 15 0 1 1 15 15 a21 21 0 1 1 -21 -21" fill="none" stroke="#a85a38" stroke-width="3"/>${dot(98,78,2)}`;
+ART.schmetterling = `<path d="M60 48 Q30 4 12 28 Q6 52 60 52z" fill="${TERRA}"/><path d="M60 48 Q90 4 108 28 Q114 52 60 52z" fill="${TERRA}"/><path d="M60 52 Q20 56 26 84 Q44 92 60 58z" fill="${MUST}"/><path d="M60 52 Q100 56 94 84 Q76 92 60 58z" fill="${MUST}"/>
+${dot(30,34,6,CRM)}${dot(90,34,6,CRM)}${dot(38,72,5,CRM)}${dot(82,72,5,CRM)}<rect x="56" y="30" width="8" height="50" rx="4" fill="${BRN}"/><path d="M58 30 Q50 14 42 12 M62 30 Q70 14 78 12" fill="none" stroke-width="2"/>`;
+/* ---------- Dinge ---------- */
+ART.ball = `<circle cx="60" cy="52" r="38" fill="${WHT}"/><path d="M60 14 A38 38 0 0 0 60 90 Q38 52 60 14z" fill="${TERRA}"/><path d="M60 14 A38 38 0 0 1 60 90 Q82 52 60 14z" fill="${PET}"/><circle cx="60" cy="52" r="38" fill="none"/><circle cx="60" cy="14" r="3" fill="${MUST}"/>`;
+ART.haus = `<rect x="78" y="14" width="12" height="26" fill="${BRN}"/><rect x="22" y="46" width="76" height="44" fill="#f2d9a6"/><path d="M12 50 L60 12 L108 50z" fill="${TERRA}"/><rect x="52" y="62" width="18" height="28" rx="2" fill="${BRN}"/>${dot(66,76,1.8,MUST)}
+<rect x="29" y="58" width="17" height="16" fill="${PETL}"/><path d="M37.5 58 V74 M29 66 H46" fill="none" stroke-width="1.8"/><rect x="76" y="58" width="17" height="16" fill="${PETL}"/><path d="M84.5 58 V74 M76 66 H93" fill="none" stroke-width="1.8"/>`;
+ART.baum = `<path d="M52 92 L55 56 L67 56 L70 92z" fill="${BRN}"/><circle cx="42" cy="46" r="19" fill="#86a882"/><circle cx="78" cy="46" r="19" fill="#86a882"/><circle cx="60" cy="30" r="24" fill="#8fb08a"/><circle cx="60" cy="52" r="20" fill="#86a882" stroke="none"/><path d="M42 54 Q60 70 78 54" fill="none"/><path d="M60 62 V50" fill="none" stroke="#5f7f5f" stroke-width="2.4"/>`;
+(function(){ let p=''; for(let i=0;i<6;i++){ p+=`<ellipse cx="60" cy="22" rx="9" ry="14" fill="${ROSE}" transform="rotate(${i*60} 60 40)"/>`; }
+ART.blume = `<path d="M60 94 Q56 74 60 52" fill="none" stroke="${INK}" stroke-width="8"/><path d="M60 94 Q56 74 60 52" fill="none" stroke="${SAGED}" stroke-width="4"/><path d="M58 80 Q40 70 34 76 Q44 86 58 80z" fill="${SAGE}"/><path d="M60 72 Q78 60 86 66 Q76 78 60 72z" fill="${SAGE}"/>${p}<circle cx="60" cy="40" r="10" fill="${MUST}"/>`; })();
+(function(){ let r=''; for(let i=0;i<12;i++){ r+=`<path d="M60 8 L55 20 L65 20z" fill="${MUST}" transform="rotate(${i*30} 60 52)"/>`; }
+ART.sonne = `${r}<circle cx="60" cy="52" r="24" fill="#efc04f"/><path d="M50 56 Q60 66 70 56" fill="none" stroke-width="2.4"/>${dot(52,46,2.6)}${dot(68,46,2.6)}`; })();
+ART.wolke = `<g stroke-width="5"><circle cx="38" cy="58" r="18" fill="#f1f5f4"/><circle cx="60" cy="42" r="22" fill="#f1f5f4"/><circle cx="84" cy="54" r="19" fill="#f1f5f4"/><rect x="30" y="56" width="62" height="20" fill="#f1f5f4"/></g><g stroke="none" fill="#f1f5f4"><circle cx="38" cy="58" r="18"/><circle cx="60" cy="42" r="22"/><circle cx="84" cy="54" r="19"/><rect x="30" y="56" width="62" height="20"/></g><path d="M22 76 H98" fill="none" stroke="#f1f5f4" stroke-width="0"/><path d="M44 66 q4 4 8 0 M70 62 q4 4 8 0" fill="none" stroke="#c9d6d4" stroke-width="2"/>`;
+ART.buch = `<rect x="38" y="24" width="52" height="64" rx="2" fill="${CRM}"/><path d="M42 30 H86 M42 36 H86" fill="none" stroke="${GREY}" stroke-width="1.4"/><rect x="30" y="20" width="52" height="64" rx="3" fill="${PET}"/><rect x="30" y="20" width="9" height="64" rx="3" fill="#2f5459"/><rect x="46" y="32" width="28" height="16" rx="2" fill="${CRM}"/><path d="M50 38 H70 M50 43 H64" fill="none" stroke-width="1.8"/><path d="M48 62 H72" fill="none" stroke="${PETL}" stroke-width="3"/>`;
+ART.stift = `<g transform="rotate(-32 60 52)"><rect x="10" y="42" width="68" height="20" fill="${MUST}"/><path d="M78 42 L106 52 L78 62z" fill="#ecd2a8"/><path d="M98 49 L106 52 L98 55z" fill="${INK}"/><rect x="24" y="42" width="9" height="20" fill="${GREY}"/><rect x="4" y="42" width="21" height="20" rx="5" fill="${ROSE}"/><path d="M36 48 H76 M36 56 H76" fill="none" stroke="#b98a28" stroke-width="1.6"/></g>`;
+ART.apfel = `<path d="M60 32 C44 22 22 34 26 58 C30 82 48 92 60 85 C72 92 90 82 94 58 C98 34 76 22 60 32z" fill="#d8573f"/><path d="M60 32 Q58 20 64 12" fill="none" stroke="${BRN}" stroke-width="4"/><path d="M63 20 Q78 8 90 18 Q76 28 63 20z" fill="${SAGE}"/><path d="M36 46 Q34 58 40 66" fill="none" stroke="${WHT}" stroke-width="4" opacity=".8"/>`;
+ART.banane = `<path d="M22 28 Q28 84 90 78 Q102 76 98 66 Q58 70 42 26 Q36 20 22 28z" fill="#f1cf4a"/><path d="M26 30 Q36 70 90 72" fill="none" stroke="#c9a52a" stroke-width="2"/><path d="M22 28 L18 20 L28 20z" fill="${BRN}" stroke-width="1.8"/><circle cx="98" cy="66" r="3" fill="${BRN}" stroke="none"/>`;
+ART.brot = `<path d="M16 64 Q14 30 60 28 Q106 30 104 64 Q104 82 60 84 Q16 82 16 64z" fill="#d9a05c"/><path d="M36 44 Q44 36 50 48 M56 38 Q64 30 70 42 M76 44 Q84 38 88 50" fill="none" stroke="#a8703a" stroke-width="3"/><path d="M30 70 Q60 78 90 70" fill="none" stroke="#b98040" stroke-width="2"/>`;
+ART.muetze = `<path d="M24 66 Q26 24 60 24 Q94 24 96 66z" fill="${TERRA}"/><path d="M34 54 Q60 44 86 54 M30 40 Q60 30 90 40" fill="none" stroke="${TERRAL}" stroke-width="3"/><rect x="20" y="62" width="80" height="20" rx="8" fill="${ROSE}"/><path d="M34 64 V80 M46 64 V80 M58 64 V80 M70 64 V80 M82 64 V80" fill="none" stroke-width="1.8"/><circle cx="60" cy="18" r="10" fill="${CRM}"/>`;
+ART.hose = `<path d="M34 12 H86 V26 L92 90 H66 L60 48 L54 90 H28 L34 26z" fill="#4b7f86"/><rect x="34" y="12" width="52" height="12" fill="#3a666c"/>${dot(60,18,2.6,MUST)}<path d="M60 26 V48" fill="none" stroke-width="1.8"/><path d="M40 40 q6 4 10 0" fill="none" stroke="${PETL}" stroke-width="1.8"/>`;
+ART.schuh = `<path d="M14 80 H108 V86 Q108 92 100 92 H22 Q14 92 14 84z" fill="${CRM}"/><path d="M16 80 Q18 36 38 34 L54 40 Q66 58 90 60 Q108 62 108 74 L108 80z" fill="${TERRA}"/><path d="M40 38 L48 46 M48 34 L56 44 M56 40 L64 50" fill="none" stroke="${CRM}" stroke-width="3"/><path d="M20 68 Q50 72 108 68" fill="none" stroke="${CRM}" stroke-width="4" opacity=".9"/>`;
+ART.tisch = `<rect x="26" y="52" width="8" height="38" fill="${BRN}"/><rect x="86" y="52" width="8" height="38" fill="${BRN}"/><rect x="34" y="44" width="52" height="9" fill="${BRN}"/><rect x="14" y="34" width="92" height="12" rx="4" fill="${BRNL}"/><path d="M22 40 H50 M62 40 H96" fill="none" stroke="${BRN}" stroke-width="1.6"/>`;
+ART.bett = `<rect x="10" y="30" width="10" height="62" rx="3" fill="${BRN}"/><rect x="100" y="46" width="10" height="46" rx="3" fill="${BRN}"/><rect x="14" y="62" width="92" height="12" rx="3" fill="${BRNL}"/><rect x="18" y="48" width="84" height="18" rx="5" fill="${CRM}"/><rect x="22" y="40" width="26" height="14" rx="6" fill="${WHT}"/><path d="M46 46 H102 V68 H46z" fill="${TERRA}"/><path d="M58 46 V68 M72 46 V68 M86 46 V68" fill="none" stroke="${TERRAL}" stroke-width="3"/>`;
+ART.lampe = `<rect x="55" y="52" width="10" height="30" fill="${BRN}"/><ellipse cx="60" cy="86" rx="24" ry="7" fill="${BRN}"/><path d="M36 14 H84 L98 52 H22z" fill="${MUST}"/><path d="M42 20 L34 46 M60 20 V48 M78 20 L86 46" fill="none" stroke="#c48f20" stroke-width="2"/><path d="M60 52 V54" />`;
+ART.uhr = `<circle cx="60" cy="52" r="40" fill="${BRN}"/><circle cx="60" cy="52" r="33" fill="${CRM}"/><path d="M60 22 V28 M60 76 V82 M30 52 H36 M84 52 H90 M45 26 L48 31 M75 26 L72 31 M45 78 L48 73 M75 78 L72 73 M26.5 37 L31.5 40 M93.5 37 L88.5 40 M26.5 67 L31.5 64 M93.5 67 L88.5 64" fill="none" stroke-width="2.4"/><path d="M60 52 L48 42" stroke-width="4.5"/><path d="M60 52 L82 40" stroke-width="3.4"/>${dot(60,52,3.6)}`;
+ART.fahrrad = `<circle cx="28" cy="66" r="21" fill="none" stroke-width="5"/><circle cx="94" cy="66" r="21" fill="none" stroke-width="5"/>${limb([[28,66],[54,66],[48,40],[28,66]],TERRA,3.6)}${limb([[54,66],[84,40],[48,40]],TERRA,3.6)}${limb([[84,40],[94,66]],TERRA,3.6)}${limb([[84,40],[84,30]],INK,2.4)}<path d="M76 28 H92" stroke-width="4" fill="none"/><path d="M40 38 H56" stroke-width="5" fill="none"/>${dot(54,66,5,MUST)}${dot(28,66,3)}${dot(94,66,3)}`;
+(function(){ let pts=[]; for(let i=0;i<5;i++){ const a=(-90+i*72)*Math.PI/180, b=(-90+i*72+36)*Math.PI/180; pts.push((60+38*Math.cos(a)).toFixed(1)+','+(54+38*Math.sin(a)).toFixed(1)); pts.push((60+16*Math.cos(b)).toFixed(1)+','+(54+16*Math.sin(b)).toFixed(1)); }
+ART.stern = `<polygon points="${pts.join(' ')}" fill="${MUST}"/>`; })();
+ART.regenschirm = `<path d="M60 52 V80 Q60 90 50 90 Q44 90 44 84" fill="none" stroke="${INK}" stroke-width="8"/><path d="M60 52 V80 Q60 90 50 90 Q44 90 44 84" fill="none" stroke="${BRN}" stroke-width="4"/><path d="M10 54 Q60 -8 110 54 Q97 46 85 54 Q72 46 60 54 Q48 46 35 54 Q22 46 10 54z" fill="${PET}"/><path d="M60 54 V10 M60 54 Q40 30 30 14 M60 54 Q80 30 90 14" fill="none" stroke="#2f5459" stroke-width="1.6"/><path d="M60 8 V3" stroke-width="3"/>`;
+ART.regenschirm_regen = ART.regenschirm.replace('<path d="M60 8 V3" stroke-width="3"/>','')+`<g stroke="${PET}" stroke-width="2.6" fill="none"><path d="M10 62 l-3 8 M24 66 l-3 8 M96 62 l-3 8 M108 66 l-3 8 M78 70 l-3 8 M32 80 l-3 8 M100 82 l-3 8"/></g>`;
+ART.eis = `<path d="M38 56 L82 56 L60 96z" fill="#e0a860"/><path d="M45 64 L70 64 M50 74 L66 74 M44 58 L66 90 M52 58 L68 82 M60 58 L72 76" fill="none" stroke="#b97d3f" stroke-width="1.6"/><circle cx="60" cy="44" r="22" fill="${SAGE}"/><circle cx="60" cy="26" r="18" fill="${ROSE}"/><circle cx="60" cy="8" r="5" fill="${TERRA}"/><path d="M42 48 q4 8 8 0 q4 8 8 0" fill="none" stroke="${WHT}" stroke-width="2.4"/>`;
+ART.pilz = `<path d="M44 54 Q42 80 36 90 H84 Q78 80 76 54z" fill="${CRM}"/><path d="M14 56 Q16 14 60 14 Q104 14 106 56z" fill="${TERRA}"/>${dot(40,34,6,CRM)}${dot(66,26,5,CRM)}${dot(84,42,6,CRM)}${dot(58,46,4,CRM)}`;
+ART.schluessel = `<circle cx="32" cy="50" r="19" fill="${MUST}"/><circle cx="32" cy="50" r="8" fill="${CRM}"/><rect x="48" y="44" width="58" height="12" rx="4" fill="${MUST}"/><rect x="86" y="56" width="9" height="16" rx="1" fill="${MUST}"/><rect x="99" y="56" width="8" height="11" rx="1" fill="${MUST}"/>`;
+ART.tasse = `<path d="M82 44 Q108 42 106 60 Q104 76 80 74" fill="none" stroke="${INK}" stroke-width="10"/><path d="M82 44 Q108 42 106 60 Q104 76 80 74" fill="none" stroke="${CRM}" stroke-width="5"/><path d="M22 40 H86 V64 Q86 88 54 88 Q22 88 22 64z" fill="${CRM}"/><path d="M22 52 H86" fill="none" stroke="${TERRA}" stroke-width="7"/><path d="M40 32 Q34 24 40 18 Q46 12 40 6 M58 32 Q52 24 58 18 Q64 12 58 6 M76 32 Q70 24 76 18 Q82 12 76 6" fill="none" stroke="${GREY}" stroke-width="3"/>`;
+ART.zitrone = `<path d="M14 54 Q16 50 22 52 Q26 26 60 26 Q94 26 98 52 Q104 50 106 54 Q104 58 98 56 Q94 80 60 80 Q26 80 22 56 Q16 58 14 54z" fill="#f3d94a"/><path d="M60 26 Q64 14 74 12 Q72 24 60 26z" fill="${SAGE}"/><path d="M40 40 Q44 36 50 36" fill="none" stroke="${WHT}" stroke-width="3" opacity=".8"/>`;
+ART.schneemann = `<circle cx="60" cy="72" r="24" fill="${WHT}"/><circle cx="60" cy="44" r="18" fill="${WHT}"/><circle cx="60" cy="22" r="13" fill="${WHT}"/><path d="M42 44 L16 34 M78 44 L104 32" fill="none" stroke="${BRN}" stroke-width="3"/><path d="M48 33 Q60 40 72 33 L72 39 Q60 46 48 39z" fill="${ROSE}" stroke-width="2"/><path d="M60 22 L72 25 L60 27z" fill="${TERRA}" stroke-width="1.6"/>${dot(55,19,2)}${dot(65,19,2)}${dot(60,52,2.4)}${dot(60,62,2.4)}${dot(60,72,2.4)}`;
+ART.kerze = `<rect x="46" y="38" width="28" height="48" rx="3" fill="${CRM}"/><path d="M60 38 V30" stroke-width="2.4"/><path d="M60 8 Q74 24 60 32 Q46 24 60 8z" fill="${MUST}"/><path d="M46 50 q5 7 9 0 q5 8 9 0" fill="none" stroke="${ROSE}" stroke-width="3"/>`;
+/* ---------- Gesichter (Gefühle) ---------- */
+ART.hase_schnell = `<path d="M6 40 H34 M2 54 H30 M8 68 H32" fill="none" stroke="${GREY}" stroke-width="3.2"/><g transform="translate(14 0)">${ART.hase}</g>`;
+ART.lampe_hell = `<path d="M60 4 V12 M26 14 L32 20 M94 14 L88 20 M14 34 L24 36 M106 34 L96 36" fill="none" stroke="${MUST}" stroke-width="3.4"/>`+ART.lampe.replace('<path d="M60 52 V54" />','');
+function faceBase(){ return `<path d="M20 98 Q22 76 60 76 Q98 76 100 98z" fill="${PETL}"/><circle cx="60" cy="48" r="28" fill="${SKIN}"/><path d="M32 44 Q30 18 60 18 Q90 18 88 44 Q74 30 60 34 Q46 30 32 44z" fill="#6b4a33"/>`; }
+ART.kind_froehlich = faceBase()+`<path d="M46 50 Q50 45 54 50 M66 50 Q70 45 74 50" fill="none" stroke-width="2.6"/><path d="M44 58 Q60 78 76 58z" fill="${WHT}"/><path d="M50 66 Q60 72 70 66" fill="${TERRA}" stroke="none"/><circle cx="40" cy="58" r="4.4" fill="${ROSE}" stroke="none" opacity=".8"/><circle cx="80" cy="58" r="4.4" fill="${ROSE}" stroke="none" opacity=".8"/>`;
+ART.kind_traurig = faceBase()+`<path d="M44 40 L54 44 M76 40 L66 44" fill="none" stroke-width="2.6"/>${dot(50,50,3)}${dot(70,50,3)}<path d="M48 70 Q60 60 72 70" fill="none" stroke-width="2.8"/><path d="M50 56 q-2 8 0 12 q3 -4 0 -12z" fill="#9cd0e0" stroke-width="1.4"/><path d="M72 56 q-2 8 0 12 q3 -4 0 -12z" fill="#9cd0e0" stroke-width="1.4"/>`;
+ART.kind_muede = faceBase()+`<path d="M44 48 Q50 52 56 48 M64 48 Q70 52 76 48" fill="none" stroke-width="2.6"/><ellipse cx="60" cy="66" rx="6" ry="8" fill="#a85a38"/><path d="M84 22 h10 l-10 12 h10" fill="none" stroke-width="2.4"/><path d="M96 10 h7 l-7 8 h7" fill="none" stroke-width="2"/>`;
+/* ---------- Kinder in Szenen (Verben) ---------- */
+const HAIR='#6b4a33', SHIRT1=TERRAL, SHIRT2=PETL, PANTS=PET;
+function head(x,y,opt={}){ const r=opt.r||11; let f=`<circle cx="${x}" cy="${y}" r="${r}" fill="${SKIN}"/><path d="M${x-r} ${y-1} Q${x-r+1} ${y-r-3} ${x} ${y-r-1} Q${x+r} ${y-r-3} ${x+r} ${y-1} Q${x+2} ${y-r+4} ${x-r} ${y-1}z" fill="${opt.hair||HAIR}"/>`; return f; }
+function face(x,y,kind='n',dir=1){ const e=kind==='close'?`<path d="M${x-6+dir*2} ${y+1} q2 2 4 0 M${x+2+dir*2} ${y+1} q2 2 4 0" fill="none" stroke-width="1.6"/>`:`<circle cx="${x-3+dir*3}" cy="${y+1}" r="1.5" fill="${INK}" stroke="none"/><circle cx="${x+4+dir*3}" cy="${y+1}" r="1.5" fill="${INK}" stroke="none"/>`;
+  const m = kind==='laugh' ? `<path d="M${x-4+dir*3} ${y+5} q5 8 10 0z" fill="${WHT}" stroke-width="1.6"/>` : kind==='open' ? `<ellipse cx="${x+dir*3+1}" cy="${y+7}" rx="3.4" ry="4" fill="#a85a38" stroke-width="1.4"/>` : kind==='cry' ? `<path d="M${x-3+dir*3} ${y+8} q4 -4 8 0" fill="none" stroke-width="1.6"/>` : `<path d="M${x-3+dir*3} ${y+6} q4 3 8 0" fill="none" stroke-width="1.6"/>`;
+  return e+m; }
+const shadow=(x=60,y=94,rx=30)=>`<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="4" fill="#d9c9a3" stroke="none"/>`;
+ART.s_laufen = shadow(56,94,34)+`<path d="M10 40 H26 M6 52 H22 M12 64 H26" fill="none" stroke="${GREY}" stroke-width="3"/>`+limb([[54,58],[40,70],[24,80]],PANTS,8)+limb([[54,58],[70,68],[62,88]],PANTS,8)+limb([[66,36],[78,48],[88,40]],SKIN,6)+limb([[62,36],[50,44],[42,34]],SKIN,6)+limb([[68,30],[54,58]],SHIRT1,15)+head(72,22)+face(72,22,'n',1);
+ART.s_springen = shadow(60,94,22)+limb([[60,56],[46,68],[38,78]],PANTS,8)+limb([[60,56],[76,66],[86,76]],PANTS,8)+limb([[60,36],[46,26],[38,12]],SKIN,6)+limb([[60,36],[74,26],[84,12]],SKIN,6)+limb([[60,34],[60,56]],SHIRT2,15)+head(60,22)+face(60,22,'laugh',0)+`<path d="M44 90 h8 M68 90 h8" stroke="${GREY}" stroke-width="2.4" fill="none"/>`;
+ART.s_schlafen = `<rect x="6" y="64" width="108" height="10" rx="3" fill="${BRNL}"/><rect x="6" y="40" width="9" height="52" rx="3" fill="${BRN}"/><rect x="105" y="54" width="9" height="38" rx="3" fill="${BRN}"/><rect x="14" y="52" width="92" height="16" rx="5" fill="${CRM}"/><rect x="16" y="44" width="28" height="16" rx="7" fill="${WHT}"/><circle cx="30" cy="48" r="10" fill="${SKIN}"/><path d="M20 47 Q22 36 32 38 Q40 40 40 47 Q30 42 20 47z" fill="${HAIR}"/><path d="M24 52 q3 2 6 0 M32 52 q3 2 6 0" fill="none" stroke-width="1.5"/><path d="M40 56 H104 V70 H40z" fill="${PET}"/><path d="M52 56 V70 M66 56 V70 M80 56 V70 M94 56 V70" stroke="${PETL}" stroke-width="3" fill="none"/><text x="52" y="38" font-family="Georgia,serif" font-weight="700" font-size="16" fill="${INK}" stroke="none">z</text><text x="64" y="28" font-family="Georgia,serif" font-weight="700" font-size="20" fill="${INK}" stroke="none">z</text><text x="78" y="16" font-family="Georgia,serif" font-weight="700" font-size="24" fill="${INK}" stroke="none">Z</text>`;
+ART.s_lesen = shadow(60,92,42)+limb([[46,68],[76,72],[88,86]],PANTS,8)+limb([[46,38],[46,68]],SHIRT1,15)+head(46,24)+face(46,24,'n',1)+`<path d="M52 42 L68 46 L68 68 L52 64z" fill="${WHT}"/><path d="M68 46 L86 42 L86 64 L68 68z" fill="${CRM}"/><path d="M56 50 H64 M56 55 H64 M72 51 H82 M72 56 H82" fill="none" stroke="${GREY}" stroke-width="1.4"/><path d="M68 46 V68" fill="none"/>`+limb([[46,42],[56,60]],SKIN,6)+`<circle cx="57" cy="62" r="3.4" fill="${SKIN}"/>`;
+ART.s_malen = shadow(50,94,40)+`<path d="M72 88 L84 38 M104 88 L92 38 M88 38 V88" fill="none" stroke="${BRN}" stroke-width="3.4"/><rect x="70" y="14" width="40" height="34" fill="${WHT}"/><path d="M76 40 Q86 20 94 34 Q102 40 104 22" fill="none" stroke="${TERRA}" stroke-width="3.6"/><path d="M76 28 Q88 24 98 28" fill="none" stroke="${PET}" stroke-width="3.6"/>`+limb([[34,60],[28,78],[24,90]],PANTS,8)+limb([[34,60],[42,78],[44,90]],PANTS,8)+limb([[34,38],[34,62]],SHIRT2,15)+limb([[38,40],[54,40],[68,30]],SKIN,6)+`<path d="M66 30 L74 24" stroke="${TERRA}" stroke-width="3.6"/>`+limb([[30,42],[22,50]],SKIN,6)+head(34,24)+face(34,24,'n',1);
+ART.s_lachen = shadow(60,94,26)+limb([[54,60],[48,78],[46,90]],PANTS,8)+limb([[66,60],[72,78],[76,90]],PANTS,8)+limb([[60,40],[60,62]],SHIRT1,17)+limb([[52,42],[44,54],[56,58]],SKIN,6)+limb([[68,42],[76,54],[64,58]],SKIN,6)+head(60,25,{r:13})+face(60,25,'laugh',0)+`<path d="M24 22 q-6 -6 -2 -12 M92 18 q8 -4 6 -12" fill="none" stroke="${MUST}" stroke-width="2.6"/>`;
+ART.s_schwimmen = `<rect x="0" y="52" width="120" height="48" fill="#a9d1d3" stroke="none"/>`+limb([[40,50],[62,52]],SHIRT2,14)+limb([[60,52],[84,40],[100,48]],SKIN,6)+limb([[44,46],[30,36],[20,42]],SKIN,6)+`<circle cx="44" cy="40" r="11" fill="${SKIN}"/><path d="M33 39 Q34 26 44 28 Q54 26 55 39 Q44 33 33 39z" fill="${ROSE}"/>`+face(44,40,'n',1)+`<path d="M0 56 Q10 50 20 56 T40 56 T60 56 T80 56 T100 56 T120 56 V100 H0z" fill="#8fc2c6" stroke-width="2.4"/><path d="M8 72 Q18 66 28 72 T48 72 M60 80 Q70 74 80 80 T100 80" fill="none" stroke="${WHT}" stroke-width="2"/>`;
+ART.s_singen = shadow(50,94,28)+limb([[44,60],[40,78],[38,90]],PANTS,8)+limb([[56,60],[60,78],[62,90]],PANTS,8)+limb([[50,38],[50,62]],SHIRT1,16)+limb([[44,42],[40,52],[50,54]],SKIN,6)+limb([[56,42],[60,52],[52,54]],SKIN,6)+head(50,24,{r:12})+face(50,24,'open',0)+`<g fill="${INK}" stroke="${INK}" stroke-width="2"><ellipse cx="82" cy="28" rx="5" ry="3.6" transform="rotate(-20 82 28)"/><path d="M86 26 V10 L96 14" fill="none" stroke-width="2.4"/><ellipse cx="100" cy="52" rx="5" ry="3.6" transform="rotate(-20 100 52)"/><path d="M104 50 V34 L112 38" fill="none" stroke-width="2.4"/><ellipse cx="78" cy="62" rx="4" ry="3" transform="rotate(-20 78 62)"/><path d="M81.5 60.5 V47" fill="none" stroke-width="2.2"/></g>`;
+ART.s_tanzen = shadow(56,94,28)+limb([[56,58],[44,72],[40,90]],PANTS,8)+limb([[56,58],[72,66],[80,60]],PANTS,8)+`<path d="M56 46 L38 74 H76z" fill="${ROSE}"/>`+limb([[56,36],[56,52]],ROSE,13)+limb([[52,40],[36,32],[30,18]],SKIN,6)+limb([[60,40],[76,30],[84,18]],SKIN,6)+head(56,24)+face(56,24,'laugh',0)+`<g fill="none" stroke="${INK}" stroke-width="2.2"><path d="M96 56 V40 L104 43"/><ellipse cx="92" cy="57" rx="4.4" ry="3.2" fill="${INK}" transform="rotate(-20 92 57)"/><path d="M14 54 V40 L22 43"/><ellipse cx="10" cy="55" rx="4.4" ry="3.2" fill="${INK}" transform="rotate(-20 10 55)"/></g>`;
+ART.s_essen = `<rect x="6" y="66" width="108" height="8" rx="2" fill="${BRNL}"/><rect x="14" y="74" width="7" height="20" fill="${BRN}"/><rect x="99" y="74" width="7" height="20" fill="${BRN}"/>`+limb([[40,60],[40,66]],SHIRT2,16)+limb([[40,40],[40,66]],SHIRT2,16)+head(40,26)+face(40,26,'open',1)+limb([[44,46],[56,52],[56,40]],SKIN,6)+`<path d="M56 33 C50 28 44 34 46 40 C48 48 54 50 56 48 C58 50 64 48 66 40 C68 34 62 28 56 33z" fill="#d8573f" transform="translate(6,-6)"/><path d="M62 24 Q64 18 68 16" fill="none" stroke="${BRN}" stroke-width="2.4"/><ellipse cx="86" cy="64" rx="15" ry="3.5" fill="${CRM}"/><circle cx="86" cy="58" r="6" fill="#d8573f" stroke-width="2"/>`;
+ART.s_fahren = shadow(60,94,52)+`<circle cx="28" cy="74" r="18" fill="none" stroke-width="4.4"/><circle cx="94" cy="74" r="18" fill="none" stroke-width="4.4"/>`+limb([[28,74],[56,74],[50,50],[28,74]],TERRA,3.4)+limb([[56,74],[84,48],[50,50]],TERRA,3.4)+limb([[84,48],[94,74]],TERRA,3.4)+limb([[84,48],[84,40]],INK,2.4)+`<path d="M78 38 H92" stroke-width="3.6" fill="none"/><path d="M42 48 H56" stroke-width="4.4" fill="none"/>`+limb([[48,44],[62,56],[56,72]],PANTS,8)+limb([[52,46],[60,34]],SHIRT1,15)+limb([[60,32],[72,38],[84,40]],SKIN,6)+head(62,20)+face(62,20,'laugh',1)+dot(56,74,4.4,MUST);
+ART.s_winken = shadow(60,94,26)+limb([[54,60],[50,78],[48,90]],PANTS,8)+limb([[66,60],[70,78],[72,90]],PANTS,8)+limb([[60,36],[60,62]],SHIRT2,16)+limb([[52,40],[46,56],[48,64]],SKIN,6)+limb([[68,40],[80,34],[86,18]],SKIN,6)+`<circle cx="86" cy="14" r="6" fill="${SKIN}"/>`+head(60,24)+face(60,24,'laugh',0)+`<path d="M96 8 q6 4 6 10 M100 2 q10 6 10 16" fill="none" stroke="${MUST}" stroke-width="2.6"/>`;
+ART.s_werfen = shadow(56,94,34)+limb([[52,58],[36,74],[26,88]],PANTS,8)+limb([[52,58],[66,72],[74,88]],PANTS,8)+limb([[54,36],[52,60]],SHIRT1,15)+limb([[48,40],[34,48],[28,40]],SKIN,6)+limb([[58,38],[70,26],[78,14]],SKIN,6)+head(52,24)+face(52,24,'n',1)+`<circle cx="86" cy="8" r="7" fill="${TERRA}"/><path d="M82 5 Q86 9 90 5" fill="none" stroke="${WHT}" stroke-width="1.8"/><path d="M94 14 Q104 26 108 44" fill="none" stroke="${GREY}" stroke-width="2.4" stroke-dasharray="3 5"/>`;
+ART.s_weinen = shadow(60,94,26)+limb([[54,62],[50,78],[48,90]],PANTS,8)+limb([[66,62],[70,78],[72,90]],PANTS,8)+limb([[60,38],[60,64]],SHIRT2,16)+limb([[52,42],[48,54],[52,34]],SKIN,6)+limb([[68,42],[72,54],[68,34]],SKIN,6)+head(60,24)+`<path d="M52 27 q3 -2 6 0 M62 27 q3 -2 6 0" fill="none" stroke-width="1.6"/><path d="M55 33 q5 -4 10 0" fill="none" stroke-width="1.6"/><path d="M48 30 q-4 8 0 14 q4 -6 0 -14z M72 30 q-4 8 0 14 q4 -6 0 -14z" fill="#9cd0e0" stroke-width="1.4"/>`;
+function artSvg(key, cls){ const k=ART[key]; if(!k) return ''; return `<svg class="pic ${cls||''}" viewBox="0 0 120 100" aria-hidden="true" focusable="false"><g stroke="${INK}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${k}</g></svg>`; }
+/* ===== Detektivwelt: Hinweise, Fall-Symbole, Kinder, Zentrale ===== */
+const CLUE_ART = [];
+(function(){
+ const toe=(x,y,r)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${BRN}" stroke="none"/>`;
+ const foot=(x,y,rot)=>`<g transform="rotate(${rot} ${x} ${y})"><ellipse cx="${x}" cy="${y}" rx="11" ry="17" fill="${BRN}" stroke="none"/><ellipse cx="${x+1}" cy="${y+22}" rx="8" ry="6" fill="${BRN}" stroke="none"/>${toe(x-9,y-22,3.4)}${toe(x-3,y-27,3.4)}${toe(x+4,y-27,3.4)}${toe(x+10,y-22,3.2)}</g>`;
+ CLUE_ART[0]={name:'Fußspur', svg:foot(44,44,-12)+foot(80,56,12)};
+ CLUE_ART[1]={name:'Schlüssel', svg:`<g stroke="${INK}" stroke-width="2.4" stroke-linejoin="round">${ART.schluessel}</g>`};
+ let fp=''; for(let i=1;i<=6;i++){ fp+=`<ellipse cx="60" cy="54" rx="${i*5.2}" ry="${i*6.6}" fill="none" stroke="${PET}" stroke-width="2.6" stroke-dasharray="${i%2?'22 5 9 4':'30 6 14 5'}" transform="rotate(${i*23} 60 54)"/>`; }
+ CLUE_ART[2]={name:'Fingerabdruck', svg:`<ellipse cx="60" cy="54" rx="38" ry="44" fill="#f1e6c6" stroke="${GREY}" stroke-width="2"/>${fp}`};
+ CLUE_ART[3]={name:'Brief', svg:`<g stroke="${INK}" stroke-width="2.4" stroke-linejoin="round"><rect x="14" y="24" width="92" height="60" rx="4" fill="${CRM}"/><path d="M14 28 L60 60 L106 28" fill="none"/><path d="M14 82 L48 54 M106 82 L72 54" fill="none" stroke-width="1.8"/><rect x="82" y="30" width="18" height="14" fill="${ROSE}" transform="rotate(6 91 37)"/></g>`};
+ CLUE_ART[4]={name:'Feder', svg:`<g stroke="${INK}" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><path d="M96 14 Q50 8 34 52 Q30 66 22 90 Q50 76 66 62 Q96 44 96 14z" fill="${TERRAL}"/><path d="M22 90 Q54 52 92 18" fill="none"/><path d="M44 58 L56 52 M52 46 L64 40 M60 38 L72 32 M38 70 L48 66" fill="none" stroke-width="1.8"/></g>`};
+ CLUE_ART[5]={name:'Knopf', svg:`<g stroke="${INK}" stroke-width="2.4"><circle cx="60" cy="50" r="32" fill="${MUST}"/><circle cx="60" cy="50" r="23" fill="none" stroke-width="1.8"/><circle cx="51" cy="42" r="4" fill="${CRM}"/><circle cx="69" cy="42" r="4" fill="${CRM}"/><circle cx="51" cy="58" r="4" fill="${CRM}"/><circle cx="69" cy="58" r="4" fill="${CRM}"/><path d="M51 42 L69 58 M69 42 L51 58" fill="none" stroke="${PET}" stroke-width="2"/></g>`};
+ CLUE_ART[6]={name:'Taschenuhr', svg:`<g stroke="${INK}" stroke-width="2.4" stroke-linecap="round"><path d="M60 22 Q60 10 72 8 Q84 8 86 18" fill="none" stroke-width="3"/><rect x="54" y="18" width="12" height="9" fill="${MUST}"/><circle cx="60" cy="58" r="32" fill="${MUST}"/><circle cx="60" cy="58" r="25" fill="${CRM}"/><path d="M60 36 V40 M60 76 V80 M38 58 H42 M78 58 H82" fill="none"/><path d="M60 58 L60 44 M60 58 L72 64" fill="none" stroke-width="3"/></g>`};
+ CLUE_ART[7]={name:'Hut', svg:`<g stroke="${INK}" stroke-width="2.4" stroke-linejoin="round"><ellipse cx="60" cy="68" rx="46" ry="12" fill="${BRNL}"/><path d="M30 66 Q28 28 60 26 Q92 28 90 66 Q60 76 30 66z" fill="${BRN}"/><path d="M31 58 Q60 68 89 58 L90 66 Q60 76 30 66z" fill="${TERRA}"/><path d="M44 32 Q60 40 76 32" fill="none" stroke-width="1.8"/></g>`};
+})();
+function clueSvg(i){ return `<svg class="pic" viewBox="0 0 120 100" aria-hidden="true" focusable="false">${CLUE_ART[i].svg}</svg>`; }
+
+/* ---- Symbole der sechs Fälle ---- */
+const MODE_ICON = {
+ lupe: `<g stroke="${INK}" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><rect x="10" y="26" width="70" height="46" rx="3" fill="${CRM}"/><path d="M18 40 H62 M18 50 H50" fill="none" stroke="${GREY}" stroke-width="2"/><text x="20" y="64" font-family="Georgia,serif" font-weight="700" font-size="15" fill="${INK}" stroke="none">Wort</text><circle cx="78" cy="42" r="22" fill="#d9ecea" fill-opacity=".85"/><path d="M93 58 L112 82" stroke="${BRN}" stroke-width="9"/><path d="M93 58 L112 82" stroke="${BRNL}" stroke-width="4.4"/><path d="M66 34 Q70 28 78 27" fill="none" stroke="${WHT}" stroke-width="3"/></g>`,
+ schrank: `<g stroke="${INK}" stroke-width="2.4" stroke-linejoin="round"><rect x="26" y="8" width="68" height="86" rx="4" fill="${SAGE}"/><rect x="32" y="14" width="56" height="22" rx="2" fill="#b9cdb6"/><rect x="32" y="40" width="56" height="22" rx="2" fill="#b9cdb6"/><rect x="32" y="66" width="56" height="22" rx="2" fill="#b9cdb6"/><rect x="50" y="21" width="20" height="8" rx="2" fill="${CRM}"/><rect x="50" y="47" width="20" height="8" rx="2" fill="${CRM}"/><rect x="50" y="73" width="20" height="8" rx="2" fill="${CRM}"/><path d="M54 25 H66 M54 51 H66 M54 77 H66" fill="none" stroke-width="1.4"/></g>`,
+ spur: `<g>${[[28,70,-14],[48,50,-6],[68,64,-12],[88,40,-4]].map(([x,y,r])=>`<g transform="rotate(${r} ${x} ${y})"><ellipse cx="${x}" cy="${y}" rx="7" ry="10.5" fill="${BRN}"/><ellipse cx="${x}" cy="${y+14}" rx="5" ry="4" fill="${BRN}"/><circle cx="${x-6}" cy="${y-13}" r="2.2" fill="${BRN}"/><circle cx="${x-2}" cy="${y-16}" r="2.2" fill="${BRN}"/><circle cx="${x+3}" cy="${y-16}" r="2.2" fill="${BRN}"/><circle cx="${x+7}" cy="${y-12}" r="2" fill="${BRN}"/></g>`).join('')}<circle cx="100" cy="24" r="13" fill="${MUST}" stroke="${INK}" stroke-width="2.4"/><text x="100" y="31" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="20" fill="${INK}">?</text></g>`,
+ pinnwand: `<g stroke="${INK}" stroke-width="2.4" stroke-linejoin="round"><rect x="10" y="12" width="100" height="76" rx="5" fill="#d9b27a"/><rect x="16" y="18" width="88" height="64" rx="2" fill="#e7c898" stroke-width="1.4"/><rect x="22" y="24" width="26" height="20" fill="${CRM}" transform="rotate(-4 35 34)"/><rect x="62" y="22" width="28" height="20" fill="${ROSE}" transform="rotate(4 76 32)"/><rect x="38" y="52" width="30" height="22" fill="${CRM}" transform="rotate(3 53 63)"/><path d="M36 30 L76 28 L54 60" fill="none" stroke="${TERRA}" stroke-width="2.4"/><circle cx="36" cy="30" r="4" fill="${TERRA}"/><circle cx="76" cy="28" r="4" fill="${PET}"/><circle cx="54" cy="60" r="4" fill="${MUST}"/></g>`,
+ notizbuch: `<g stroke="${INK}" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><rect x="22" y="10" width="64" height="82" rx="4" fill="${TERRA}"/><rect x="30" y="16" width="52" height="70" rx="2" fill="${CRM}"/><path d="M38 30 H74 M38 40 H74 M38 50 H74 M38 60 H62" fill="none" stroke="${GREY}" stroke-width="1.8"/>${[20,32,44,56,68,80].map(y=>`<path d="M16 ${y} H32" fill="none" stroke="${GREY}" stroke-width="3"/>`).join('')}<g transform="rotate(30 92 60)"><rect x="84" y="24" width="12" height="62" fill="${MUST}"/><path d="M84 86 L90 100 L96 86z" fill="#ecd2a8"/></g></g>`,
+ fallakte: `<g stroke="${INK}" stroke-width="2.4" stroke-linejoin="round"><path d="M10 28 H40 L48 20 H110 V90 H10z" fill="#d9b27a"/><rect x="10" y="30" width="100" height="60" rx="3" fill="#e9c88e"/><rect x="22" y="40" width="50" height="34" fill="${CRM}"/><path d="M28 50 H66 M28 58 H66 M28 66 H54" fill="none" stroke="${GREY}" stroke-width="1.8"/><circle cx="90" cy="62" r="16" fill="none" stroke="${TERRA}" stroke-width="3"/><text x="90" y="69" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="21" fill="${TERRA}" stroke="none">8</text></g>`
+};
+function modeIcon(k){ return `<svg class="pic" viewBox="0 0 120 100" aria-hidden="true" focusable="false">${MODE_ICON[k]}</svg>`; }
+const LUPE_ICON = `<svg viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle cx="20" cy="20" r="12.5" fill="none" stroke="currentColor" stroke-width="4.6"/><path d="M30 30 L43 43" stroke="currentColor" stroke-width="6.2" stroke-linecap="round"/><text x="20" y="26" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="17" fill="currentColor">?</text></svg>`;
+
+/* ---- Kinder (Frontansicht), freundliche Spurensucher ---- */
+function kidFront(o={}){
+  const skin=o.skin||SKIN, hair=o.hair||HAIR, shirt=o.shirt||TERRAL, pants=o.pants||PET;
+  let hairBack='', hairFront='';
+  if(o.style==='zopf'){ hairBack=`<path d="M22 40 Q14 52 20 70" fill="none" stroke="${INK}" stroke-width="11" stroke-linecap="round"/><path d="M22 40 Q14 52 20 70" fill="none" stroke="${hair}" stroke-width="6" stroke-linecap="round"/>`; }
+  if(o.style==='locken'){ hairBack=`<circle cx="22" cy="30" r="9" fill="${hair}"/><circle cx="58" cy="30" r="9" fill="${hair}"/><circle cx="40" cy="14" r="10" fill="${hair}"/>`; }
+  hairFront=`<path d="M22 32 Q20 10 40 10 Q60 10 58 32 Q50 20 40 22 Q30 20 22 32z" fill="${hair}"/>`;
+  const hat = o.hat ? `<ellipse cx="40" cy="15" rx="23" ry="5" fill="${BRNL}"/><path d="M26 15 Q26 2 40 2 Q54 2 54 15z" fill="${BRN}"/><path d="M26 12 H54" stroke="${TERRA}" stroke-width="3.4"/>` : '';
+  const item = o.item==='lupe' ? `<g stroke="${INK}" stroke-width="2.2"><path d="M60 82 L68 66" stroke-width="7"/><path d="M60 82 L68 66" stroke="${BRN}" stroke-width="3.2"/><circle cx="72" cy="56" r="11" fill="#d9ecea" fill-opacity=".85"/></g>` : o.item==='buch' ? `<rect x="50" y="62" width="22" height="28" rx="2" fill="${PET}" transform="rotate(12 61 76)"/><path d="M54 70 H68" stroke="${CRM}" stroke-width="2.4" transform="rotate(12 61 76)"/>` : '';
+  return `<g stroke="${INK}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${hairBack}
+  <rect x="26" y="88" width="11" height="26" rx="4" fill="${pants}"/><rect x="43" y="88" width="11" height="26" rx="4" fill="${pants}"/><ellipse cx="31" cy="116" rx="9" ry="4.4" fill="${BRN}"/><ellipse cx="49" cy="116" rx="9" ry="4.4" fill="${BRN}"/>
+  <path d="M22 92 Q18 60 28 54 H52 Q62 60 58 92z" fill="${shirt}"/><path d="M30 54 Q40 64 50 54" fill="${CRM}"/>
+  <path d="M26 58 Q14 70 20 86" fill="none" stroke="${INK}" stroke-width="10"/><path d="M26 58 Q14 70 20 86" fill="none" stroke="${shirt}" stroke-width="5.6"/><circle cx="20" cy="88" r="4.4" fill="${skin}"/>
+  <path d="M54 58 Q64 66 60 80" fill="none" stroke="${INK}" stroke-width="10"/><path d="M54 58 Q64 66 60 80" fill="none" stroke="${shirt}" stroke-width="5.6"/><circle cx="60" cy="82" r="4.4" fill="${skin}"/>
+  <rect x="35" y="48" width="10" height="9" fill="${skin}"/><circle cx="40" cy="34" r="19" fill="${skin}"/>${hairFront}${hat}
+  <circle cx="33" cy="36" r="2.2" fill="${INK}" stroke="none"/><circle cx="47" cy="36" r="2.2" fill="${INK}" stroke="none"/><path d="M33 44 Q40 50 47 44" fill="none" stroke-width="2"/><circle cx="28" cy="42" r="3.4" fill="${ROSE}" stroke="none" opacity=".8"/><circle cx="52" cy="42" r="3.4" fill="${ROSE}" stroke="none" opacity=".8"/></g>${item}`;
+}
+function kidSvg(o,cls){ return `<svg class="kid ${cls||''}" viewBox="0 0 90 122" aria-hidden="true" focusable="false">${kidFront(o)}</svg>`; }
+const KIDS = [
+ {skin:SKIN, hair:HAIR, shirt:TERRAL, style:'kurz', item:'lupe', hat:true},
+ {skin:'#d9a47a', hair:'#3b2a20', shirt:PETL, style:'zopf', item:'buch'},
+ {skin:'#a9744f', hair:'#2a1e17', shirt:MUST, style:'locken', item:'lupe'},
+ {skin:'#f6d8b8', hair:'#c28a45', shirt:ROSE, style:'zopf', item:'buch'}
+];
+
+/* ---- Zentrale: Wanddekor, Schreibtisch, Abschlussszene ---- */
+const HQ_LEFT = `<g stroke="${INK}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+<rect x="40" y="20" width="150" height="120" rx="4" fill="#cfe3df"/><path d="M40 108 Q80 80 120 100 T190 96 V140 H40z" fill="${SAGE}" stroke="none"/><circle cx="150" cy="56" r="14" fill="${MUST}" stroke="none"/><rect x="40" y="20" width="150" height="120" rx="4" fill="none" stroke-width="6" stroke="${BRN}"/><path d="M115 20 V140 M40 80 H190" fill="none" stroke="${BRN}" stroke-width="4"/>
+<path d="M22 14 Q50 40 40 150 L22 150z" fill="${ROSE}"/><path d="M208 14 Q180 40 190 150 L208 150z" fill="${ROSE}"/><rect x="14" y="10" width="204" height="8" rx="3" fill="${BRN}"/>
+<rect x="238" y="96" width="150" height="10" rx="2" fill="${BRN}"/><rect x="250" y="62" width="14" height="34" fill="${PET}"/><rect x="266" y="56" width="12" height="40" fill="${TERRA}"/><rect x="280" y="66" width="14" height="30" fill="${MUST}"/><rect x="296" y="60" width="12" height="36" fill="${SAGED}"/>
+<path d="M340 96 V82 H372 V96z" fill="${TERRA}"/><path d="M356 82 Q342 66 332 58 M356 82 Q358 62 358 48 M356 82 Q372 66 384 60" fill="none" stroke="${SAGED}" stroke-width="4"/><circle cx="332" cy="56" r="6" fill="${SAGE}"/><circle cx="358" cy="46" r="6" fill="${SAGE}"/><circle cx="384" cy="58" r="6" fill="${SAGE}"/>
+<rect x="240" y="140" width="64" height="48" fill="${CRM}" transform="rotate(-3 272 164)"/><path d="M250 156 H294 M250 166 H284" stroke="${GREY}" stroke-width="2" fill="none" transform="rotate(-3 272 164)"/>
+</g>`;
+const HQ_RIGHT = `<g stroke="${INK}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+<rect x="70" y="14" width="190" height="130" rx="6" fill="#d9b27a" stroke-width="5"/><rect x="80" y="24" width="170" height="110" fill="#e7c898" stroke-width="1.6"/>
+<rect x="92" y="34" width="46" height="34" fill="${CRM}" transform="rotate(-4 115 51)"/><rect x="152" y="32" width="44" height="32" fill="${ROSE}" transform="rotate(3 174 48)"/><rect x="204" y="40" width="36" height="40" fill="${CRM}" transform="rotate(5 222 60)"/><rect x="108" y="84" width="52" height="38" fill="${CRM}" transform="rotate(3 134 103)"/><rect x="178" y="88" width="44" height="34" fill="#b9d1cd" transform="rotate(-3 200 105)"/>
+<path d="M115 40 L174 40 L222 52 L200 100 L134 100 L115 40" fill="none" stroke="${TERRA}" stroke-width="3"/>
+<circle cx="115" cy="40" r="5" fill="${TERRA}"/><circle cx="174" cy="40" r="5" fill="${PET}"/><circle cx="222" cy="52" r="5" fill="${MUST}"/><circle cx="200" cy="100" r="5" fill="${TERRA}"/><circle cx="134" cy="100" r="5" fill="${PET}"/>
+<circle cx="330" cy="60" r="34" fill="${BRN}"/><circle cx="330" cy="60" r="27" fill="${CRM}"/><path d="M330 38 V44 M330 76 V82 M308 60 H314 M346 60 H352" fill="none" stroke-width="2.4"/><path d="M330 60 L330 46 M330 60 L342 66" fill="none" stroke-width="3.4"/>
+<rect x="378" y="30" width="80" height="62" fill="${CRM}"/><rect x="384" y="36" width="68" height="50" fill="#cfe3df" stroke-width="1.6"/><path d="M384 76 Q404 56 420 70 T452 66 V86 H384z" fill="${SAGE}" stroke="none"/><path d="M418 12 V30" fill="none" stroke-width="2.4"/>
+<rect x="400" y="130" width="70" height="86" rx="4" fill="${SAGE}"/><rect x="406" y="136" width="58" height="22" rx="2" fill="#b9cdb6" stroke-width="2"/><rect x="406" y="162" width="58" height="22" rx="2" fill="#b9cdb6" stroke-width="2"/><rect x="406" y="188" width="58" height="22" rx="2" fill="#b9cdb6" stroke-width="2"/>
+</g>`;
+const DESK_LEFT = `<g stroke="${INK}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+<rect x="0" y="62" width="520" height="48" fill="${BRNL}" stroke="none"/><path d="M0 62 H520" fill="none"/><path d="M20 82 H180 M240 90 H420 M60 100 H300" fill="none" stroke="${BRN}" stroke-width="2" opacity=".5"/>
+<rect x="30" y="40" width="82" height="24" rx="2" fill="${CRM}" transform="rotate(-4 71 52)"/><rect x="36" y="30" width="76" height="22" rx="2" fill="${TERRA}" transform="rotate(3 74 41)"/><path d="M48 44 H98" fill="none" stroke="${CRM}" stroke-width="3" transform="rotate(3 74 41)"/>
+<g transform="translate(150 20)"><circle cx="26" cy="26" r="22" fill="#d9ecea" fill-opacity=".8"/><path d="M42 42 L64 62" stroke="${BRN}" stroke-width="10"/><path d="M42 42 L64 62" stroke="${BRNL}" stroke-width="4.6"/></g>
+<g transform="translate(250 22)"><path d="M6 6 H46 V40 Q46 52 26 52 Q6 52 6 40z" fill="${CRM}"/><path d="M46 14 Q62 14 60 28 Q58 40 46 38" fill="none" stroke-width="6"/><path d="M6 20 H46" fill="none" stroke="${PET}" stroke-width="6"/></g>
+<g transform="translate(340 14)"><path d="M0 50 V30 H22 V50z" fill="${TERRA}"/><path d="M11 30 Q-4 14 -12 6 M11 30 Q12 12 12 -2 M11 30 Q26 14 36 6" fill="none" stroke="${SAGED}" stroke-width="4"/><circle cx="-12" cy="4" r="6" fill="${SAGE}"/><circle cx="12" cy="-4" r="6" fill="${SAGE}"/><circle cx="36" cy="4" r="6" fill="${SAGE}"/></g>
+<g transform="translate(410 26)"><rect x="0" y="22" width="60" height="16" rx="2" fill="${PET}"/><rect x="4" y="12" width="54" height="12" rx="2" fill="${MUST}"/><rect x="8" y="2" width="46" height="12" rx="2" fill="${ROSE}"/></g>
+</g>`;
+const DESK_RIGHT = `<g stroke="${INK}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+<rect x="0" y="62" width="520" height="48" fill="${BRNL}" stroke="none"/><path d="M0 62 H520" fill="none"/><path d="M40 82 H220 M280 90 H480 M120 100 H360" fill="none" stroke="${BRN}" stroke-width="2" opacity=".5"/>
+<g transform="translate(30 18)"><rect x="0" y="26" width="60" height="18" rx="3" fill="${PET}"/><rect x="14" y="2" width="32" height="26" rx="3" fill="${TERRA}"/><path d="M30 2 V-8" stroke-width="7"/></g>
+<g transform="translate(130 14)"><rect x="0" y="30" width="70" height="18" rx="2" fill="${SAGED}"/><rect x="6" y="20" width="62" height="12" rx="2" fill="${CRM}"/><rect x="10" y="10" width="54" height="12" rx="2" fill="${ROSE}"/></g>
+<g transform="translate(240 8)"><path d="M10 54 H50 L44 46 H16z" fill="${BRN}"/><path d="M30 46 L20 18 L46 8" fill="none" stroke-width="5"/><path d="M34 2 L58 4 L52 22 Q40 28 28 18z" fill="${MUST}"/></g>
+<g transform="translate(330 22)"><rect x="0" y="12" width="48" height="32" rx="2" fill="${CRM}"/><path d="M0 14 L24 32 L48 14" fill="none"/></g>
+<g transform="translate(400 16)"><circle cx="26" cy="30" r="20" fill="#d9ecea" fill-opacity=".8"/><path d="M40 44 L58 60" stroke="${BRN}" stroke-width="9"/><path d="M40 44 L58 60" stroke="${BRNL}" stroke-width="4"/></g>
+</g>`;
+function stampSvg(txt,cls){ return `<svg class="stamp ${cls||''}" viewBox="0 0 220 90" aria-hidden="true" focusable="false"><g transform="rotate(-7 110 45)"><rect x="6" y="8" width="208" height="74" rx="10" fill="none" stroke="${TERRA}" stroke-width="5"/><rect x="14" y="16" width="192" height="58" rx="6" fill="none" stroke="${TERRA}" stroke-width="2"/><text x="110" y="56" text-anchor="middle" font-family="'Courier New',Courier,monospace" font-weight="700" font-size="${txt.length>10?24:30}" fill="${TERRA}">${txt}</text></g></svg>`; }
+/* Abschluss: fertige Pinnwand mit allen 8 Hinweisen, Kinder davor */
+function endSceneSvg(){
+  const pos=[[78,52],[168,40],[258,56],[348,42],[78,138],[168,150],[258,136],[348,148]];
+  const rot=[-4,3,-2,4,3,-3,4,-2];
+  let th='M'+pos.map(p=>(p[0]+30)+' '+(p[1]+4)).join(' L');
+  let cards=pos.map((p,i)=>`<g transform="rotate(${rot[i]} ${p[0]+30} ${p[1]+30}) translate(${p[0]} ${p[1]})"><rect width="60" height="62" rx="3" fill="${CRM}" stroke="${INK}" stroke-width="2"/><svg x="4" y="6" width="52" height="44" viewBox="0 0 120 100">${CLUE_ART[i].svg}</svg><text x="30" y="58" text-anchor="middle" font-family="'Courier New',monospace" font-size="8" font-weight="700" fill="${INK}">${i+1}</text></g>`).join('');
+  let pins=pos.map((p,i)=>`<circle cx="${p[0]+30}" cy="${p[1]+4}" r="4.6" fill="${[TERRA,PET,MUST][i%3]}" stroke="${INK}" stroke-width="1.6"/>`).join('');
+  return `<svg class="endscene" viewBox="0 0 640 380" aria-hidden="true" focusable="false">
+  <rect width="640" height="380" fill="#dfe8d8"/><path d="M0 250 H640 V380 H0z" fill="${BRNL}"/><path d="M0 250 H640" stroke="${INK}" stroke-width="3"/>
+  <g transform="translate(94 10)"><rect x="0" y="0" width="452" height="236" rx="10" fill="#c9a06a" stroke="${INK}" stroke-width="5"/><rect x="10" y="10" width="432" height="216" rx="4" fill="#e7c898" stroke="${INK}" stroke-width="2"/>
+  <g transform="translate(22 6)"><path d="${th}" fill="none" stroke="${TERRA}" stroke-width="2.6" stroke-linejoin="round"/>${cards}${pins}</g></g>
+  <g transform="translate(36 232)">${[0,1].map(i=>`<g transform="translate(${i*66} 0) scale(1.05)"><svg width="90" height="122" viewBox="0 0 90 122">${kidFront(KIDS[i])}</svg></g>`).join('')}</g>
+  <g transform="translate(466 232)">${[2,3].map((k,i)=>`<g transform="translate(${i*66} 0) scale(1.05)"><svg width="90" height="122" viewBox="0 0 90 122">${kidFront(KIDS[k])}</svg></g>`).join('')}</g>
+  <g stroke="${INK}" stroke-width="3"><rect x="0" y="350" width="640" height="30" fill="${BRN}" stroke="none"/><path d="M0 350 H640" fill="none"/></g>
+  </svg>`;
+}
+/* ===== Zufall & Hilfsfunktionen ===== */
+function randInt(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+function shuffle(a){ const r=a.slice(); for(let i=r.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [r[i],r[j]]=[r[j],r[i]]; } return r; }
+const ROUND_TARGET = 8;
+const CLASSES = ['N','V','A'];
+const CLS_UP = {N:'NOMEN',V:'VERB',A:'ADJEKTIV'}, CLS_UP_PL = {N:'NOMEN',V:'VERBEN',A:'ADJEKTIVE'};
+const CLS_NAME = {N:'Nomen',V:'Verb',A:'Adjektiv'}, CLS_PL = {N:'Nomen',V:'Verben',A:'Adjektive'};
+const LEVELS = ['leicht','mittel','schwer'];
+const DIFF_W = {leicht:{e:1}, mittel:{e:.3,m:.7}, schwer:{m:.4,h:.6}};
+const SORT_SIZES = {leicht:[3,4], mittel:[5,6], schwer:[6,7,8]};
+const SKINS = ['sk0','sk1','sk2','sk3','sk4'];     // neutrale Papierfarben – nie an eine Wortart gebunden
+const SEIN = ['ist','sind','hat','haben','war','wird','bin','bist'];
+const cap = s => s.charAt(0).toUpperCase()+s.slice(1);
+
+/* ===== Satzdaten aufbereiten ===== */
+const SENTS = RAW_S.map((r,i)=>{
+  const tokens = r[0].split(' ').map(t=>{ const m=t.match(/^(.+?)(?:\/([NVA]))?([.,!?]*)$/); return {w:m[1], c:m[2]||'-', p:m[3]}; });
+  const counts={N:0,V:0,A:0}; tokens.forEach(t=>{ if(counts[t.c]!==undefined) counts[t.c]++; });
+  const hasSein = tokens.some(t=>SEIN.includes(t.w.toLowerCase()));
+  const s = {id:'s'+i, tokens, text:tokens.map(t=>t.w+t.p).join(' '), category:r[1], d:r[2], counts, hasSein};
+  s.qs = [];
+  CLASSES.forEach(c=>{
+    if(!counts[c]) return; if(c==='V' && hasSein) return;
+    const targets=[]; tokens.forEach((t,j)=>{ if(t.c===c) targets.push(j); });
+    s.qs.push({cls:c, mode: counts[c]===1?'single':'all', targets});
+  });
+  return s;
+});
+const GAPS = RAW_G.map((r,i)=>({id:'g'+i, sentence:r[0], cls:r[1], answer:r[2], distractors:[r[3],r[4]], category:r[5], d:r[6], open:!!r[7]}));
+function classOfDistractor(w){ if(WORD_BY_TEXT[w]) return WORD_BY_TEXT[w].wordType; if(/^[A-ZÄÖÜ]/.test(w)) return 'N'; return (/(en|ern|eln)$/.test(w) && !/^golden$/.test(w)) ? 'V' : 'A'; }
+
+/* ===== Rundenzustand ===== */
+function newRound(level){
+  return { level, used:new Set(), usedGroups:new Set(), recentCats:[], catCount:{}, pos3:[0,0,0], last3:[], pos4:[0,0,0,0], last4:[],
+           sentUsed:new Set(), usedText:new Set(), gapUsed:new Set(), picUsed:new Set(), picNouns:new Set(), clsCount:{N:0,V:0,A:0}, repeats:0, texts:{}, oddMajor:[], tasksMade:0 };
+}
+function diffBucket(level, avail){ const w=DIFF_W[level]; const ks=Object.keys(w).filter(k=>avail.includes(k)); if(!ks.length) return null;
+  const tot=ks.reduce((s,k)=>s+w[k],0); let r=Math.random()*tot; for(const k of ks){ r-=w[k]; if(r<=0) return k; } return ks[ks.length-1]; }
+function pickWord(R, cls, o={}){
+  const ex=o.exclude||[];
+  let c = WORDS.filter(w=>w.wordType===cls && !ex.some(e=>e.id===w.id || (w.group && e.group===w.group)) && (!o.filter||o.filter(w)));
+  if(!c.length) return null;
+  let inLv = c.filter(w=>DIFF_W[R.level][w.difficulty]); if(!inLv.length) inLv=c;
+  let fresh = inLv.filter(w=>!R.used.has(w.id) && !R.usedText.has(w.word) && !(w.group&&R.usedGroups.has(w.group)));
+  if(!fresh.length) fresh = inLv.filter(w=>!R.used.has(w.id) && !R.usedText.has(w.word));
+  if(!fresh.length){ if(o.strict) return null; R.repeats++; fresh=inLv; }
+  const b = diffBucket(R.level, [...new Set(fresh.map(w=>w.difficulty))]); if(b) fresh = fresh.filter(w=>w.difficulty===b);
+  const avoid = new Set([...(o.avoidCats||[]), ...R.recentCats]);
+  const better = fresh.filter(w=>!avoid.has(w.category)); if(better.length) fresh=better;
+  const cc = w=>R.catCount[w.category]||0, mn=Math.min(...fresh.map(cc)); fresh=fresh.filter(w=>cc(w)===mn);
+  const w = pick(fresh); take(R,w); return w;
+}
+function take(R,w){ R.used.add(w.id); R.usedText.add(w.word); if(w.group) R.usedGroups.add(w.group); R.catCount[w.category]=(R.catCount[w.category]||0)+1; R.recentCats.push(w.category); if(R.recentCats.length>3) R.recentCats.shift(); }
+/* Position der richtigen Antwort: gleichmäßig verteilt, nie zweimal direkt hintereinander an derselben Stelle */
+function pickPos(R,n){ const cnt = n===3?R.pos3:R.pos4, last = n===3?R.last3:R.last4; const mn=Math.min(...cnt);
+  let c=[...Array(n).keys()].filter(i=>cnt[i]===mn); const nr=c.filter(i=>last[last.length-1]!==i); if(nr.length) c=nr; const p=pick(c); cnt[p]++; last.push(p); return p; }
+function placeAt(correct, others, p){ const o=shuffle(others), r=[]; let k=0; for(let i=0;i<others.length+1;i++) r.push(i===p?correct:o[k++]); return r; }
+function balancedList(n){ /* n Wortarten, möglichst gleich oft, nie mehr als zweimal hintereinander gleich */
+  for(let t=0;t<200;t++){ const base=[]; let i=randInt(0,2); while(base.length<n){ base.push(CLASSES[i%3]); i++; } const l=shuffle(base);
+    let ok=true; for(let j=2;j<l.length;j++) if(l[j]===l[j-1]&&l[j]===l[j-2]) ok=false; if(ok) return l; }
+  return shuffle(CLASSES.concat(CLASSES,CLASSES)).slice(0,n); }
+
+/* ===== Aufgabe 1: Welche Wortart ist das? ===== */
+function makeWhich(R, cls){
+  const picOk = R.level==='leicht';
+  let w;
+  if(picOk && Math.random()<.5){ w = pickWord(R, cls, {filter:x=>!!x.illustrationOptional, strict:true}); }
+  if(!w) w = pickWord(R, cls);
+  const pic = (picOk && w.illustrationOptional) ? (w.wordType==='V' ? 's_'+w.illustrationOptional : w.illustrationOptional) : null;
+  const p = pickPos(R,3), skins=shuffle(SKINS).slice(0,3);
+  const others = CLASSES.filter(c=>c!==cls);
+  const order = placeAt(cls, others, p);
+  R.clsCount[cls]++;
+  return {type:'which', word:w, cls, pic, options:order.map((c,i)=>({cls:c, skin:skins[i]})), correct:p, focus:cls};
+}
+/* ===== Aufgabe 2: Sortiere die Beweise ===== */
+function sortCounts(R,n){
+  for(let t=0;t<300;t++){ const cnt={N:1,V:1,A:1}; let left=n-3; while(left>0){ const c=pick(CLASSES); cnt[c]++; left--; }
+    const mx=Math.max(...CLASSES.map(c=>cnt[c])), mn=Math.min(...CLASSES.map(c=>cnt[c]));
+    if(n>=6 && mn<2) continue; if(mx>4||mx-mn>2) continue; return cnt; }
+  return {N:Math.ceil(n/3),V:Math.ceil((n-1)/3),A:n-Math.ceil(n/3)-Math.ceil((n-1)/3)}; }
+function makeSort(R){
+  const n = pick(SORT_SIZES[R.level]);
+  // Wortarten mit den bisher seltensten bevorzugen
+  const cnt = {N:1,V:1,A:1}; let left=n-3;
+  while(left>0){ const order=shuffle(CLASSES).sort((a,b)=>(R.clsCount[a]+cnt[a])-(R.clsCount[b]+cnt[b])); const c = (n>=6||Math.random()<.7)?order[0]:order[1]; if(cnt[c]>=3 && order.some(x=>cnt[x]<3)){ left--; cnt[order[order.length-1]]++; continue; } cnt[c]++; left--; }
+  const words=[]; CLASSES.forEach(c=>{ for(let i=0;i<cnt[c];i++){ const catSeen={}; words.forEach(w=>catSeen[w.category]=(catSeen[w.category]||0)+1);
+    const lim=n<=4?1:2; const w=pickWord(R,c,{exclude:words, avoidCats:Object.keys(catSeen), filter:x=>(catSeen[x.category]||0)<lim}); words.push(w); R.clsCount[c]++; } });
+  let order; for(let t=0;t<100;t++){ order=shuffle(words); let run=1,maxRun=1; for(let i=1;i<order.length;i++){ run = order[i].wordType===order[i-1].wordType?run+1:1; maxRun=Math.max(maxRun,run); } if(maxRun<=2 || n<=4) break; }
+  return {type:'sort', words:order, n, focus:'all'};
+}
+/* ===== Aufgabe 3: Welches Wort gehört nicht dazu? ===== */
+function makeOdd(R, major, odd){
+  const maj=[]; for(let i=0;i<3;i++){ maj.push(pickWord(R,major,{exclude:maj, avoidCats:maj.map(w=>w.category)})); }
+  // drei verschiedene Kategorien, damit die Gruppe nicht inhaltlich zusammenhängt
+  const o = pickWord(R,odd,{exclude:maj, avoidCats:maj.map(w=>w.category)});
+  R.clsCount[odd]++; R.clsCount[major]++;
+  const p=pickPos(R,4); const words=placeAt(o, maj, p);
+  return {type:'odd', words, odd:p, majorCls:major, oddCls:odd, focus:odd};
+}
+/* ===== Aufgabe 4: Wortarten im Satz ===== */
+function makeSentence(R, cls, wantMode){
+  const lv = R.level, dmap={leicht:['e'],mittel:['m','e'],schwer:['h','m']}[lv];
+  let cands=[];
+  SENTS.forEach(s=>{ if(!dmap.includes(s.d)) return; s.qs.forEach(q=>{ if(q.cls!==cls) return; if(lv==='leicht' && q.mode!=='single') return; if(lv==='schwer' && s.d!=='h' ) return; cands.push({s,q}); }); });
+  if(!cands.length){ SENTS.forEach(s=>s.qs.forEach(q=>{ if(q.cls===cls) cands.push({s,q}); })); }
+  let fresh=cands.filter(c=>!R.sentUsed.has(c.s.id)); if(!fresh.length) fresh=cands;
+  if(wantMode){ const m=fresh.filter(c=>c.q.mode===wantMode); if(m.length) fresh=m; }
+  const c=pick(fresh); R.sentUsed.add(c.s.id); R.clsCount[cls]++;
+  return {type:'sent', sent:c.s, q:c.q, focus:cls};
+}
+/* ===== Aufgabe 5: Finde das passende Wort! ===== */
+function makeFind(R, cls, variant){
+  const lv=R.level;
+  const kinds = [];
+  if(lv==='leicht'){ if(cls==='N') kinds.push('picN','gap'); if(cls==='V') kinds.push('picV','gap'); if(cls==='A') kinds.push('picA','gap'); }
+  else if(lv==='mittel'){ if(cls==='N') kinds.push('gap'); if(cls==='V') kinds.push('picV','gap'); if(cls==='A') kinds.push('picA','gap'); }
+  else { kinds.push('gap'); }
+  let kind = variant || pick(kinds);
+  if(kind==='picN'){
+    const w=pickWord(R,'N',{filter:x=>!!x.illustrationOptional});
+    const v=pickWord(R,'V',{exclude:[w]}), a=pickWord(R,'A',{exclude:[w]});
+    return finishFind({kind, cls:'N', pic:w.illustrationOptional, answer:w, others:[v,a], prompt:'Gesucht wird ein NOMEN, das zum Bild passt.'}, R);
+  }
+  if(kind==='picV'){
+    let sc = VERB_SCENES.filter(s=>(lv==='leicht'?s.d==='e':true) && !R.picUsed.has(s.pic) && !R.used.has(WORD_BY_TEXT[s.verb].id) && !R.usedText.has(s.verb)); if(!sc.length) sc=VERB_SCENES.filter(s=>!R.picUsed.has(s.pic)); if(!sc.length) sc=VERB_SCENES;
+    const s=pick(sc); R.picUsed.add(s.pic);
+    const vw = WORD_BY_TEXT[s.verb]; take(R,vw);
+    const n=pickWord(R,'N',{filter:x=>!s.nouns.includes(x.word)}), a=pickWord(R,'A',{filter:x=>!s.noAdj.includes(x.word)});
+    return finishFind({kind, cls:'V', pic:s.pic, answer:vw, others:[n,a], prompt:'Gesucht wird ein VERB, das zum Bild passt.'}, R);
+  }
+  if(kind==='picA'){
+    const nUsed=s=>{ const nw=WORD_BY_TEXT[s.noun]; return (nw && R.used.has(nw.id)) || R.picNouns.has(s.noun) || R.usedText.has(s.noun); };
+    let ap = ADJ_PICS.filter(s=>(lv==='leicht'?s.d==='e':true) && !R.picUsed.has(s.pic) && !R.used.has(WORD_BY_TEXT[s.adj].id) && !R.usedText.has(s.adj) && !nUsed(s)); if(!ap.length) ap=ADJ_PICS.filter(s=>!R.picUsed.has(s.pic)); if(!ap.length) ap=ADJ_PICS;
+    const s=pick(ap); R.picUsed.add(s.pic); R.picNouns.add(s.noun); R.usedText.add(s.noun); if(WORD_BY_TEXT[s.noun]) take(R,WORD_BY_TEXT[s.noun]);
+    const aw = WORD_BY_TEXT[s.adj]; take(R,aw);
+    const v=pickWord(R,'V',{filter:x=>!(x.word==='fahren'&&s.noun==='Fahrrad')});
+    const nounObj = {word:s.noun, wordType:'N', id:'pn_'+s.noun, category:'alltag', difficulty:'e'};
+    return finishFind({kind, cls:'A', pic:s.pic, answer:aw, others:[nounObj,v], prompt:'Gesucht wird ein ADJEKTIV, das zum Bild passt.'}, R);
+  }
+  // Lückensatz
+  const dm = {leicht:['e'],mittel:['m'],schwer:['h']}[lv];
+  let g = GAPS.filter(x=>x.cls===cls && dm.includes(x.d) && !R.gapUsed.has(x.id));
+  if(variant==='gapOpen') g=g.filter(x=>x.open); 
+  if(!g.length) g = GAPS.filter(x=>x.cls===cls && dm.includes(x.d));
+  if(lv==='schwer'){ const op=g.filter(x=>x.open), cl=g.filter(x=>!x.open); const useOpen = op.length && (!cl.length || Math.random()<.5); g = useOpen?op:cl; }
+  const fr=g.filter(y=>![y.answer,...y.distractors].some(t=>R.usedText.has(t))); if(fr.length) g=fr;
+  const x=pick(g); R.gapUsed.add(x.id); R.clsCount[cls]++; [x.answer,...x.distractors].forEach(t=>R.usedText.add(t));
+  const answer={word:x.answer, wordType:cls, id:'g_'+x.id};
+  const others=x.distractors.map(w=>({word:w, wordType:classOfDistractor(w), id:'gd_'+w}));
+  const p=pickPos(R,3), skins=shuffle(SKINS).slice(0,3), order=placeAt(answer, others, p);
+  return {type:'find', kind:'gap', cls, open:x.open, sentence:x.sentence, gapId:x.id, options:order.map((o,i)=>({word:o.word,cls:o.wordType,skin:skins[i]})), correct:p, focus:cls,
+          prompt: x.open ? 'Welches Wort passt in die Lücke?' : 'Gesucht wird '+(cls==='A'?'ein ADJEKTIV':cls==='V'?'ein VERB':'ein NOMEN')+'.'};
+}
+function finishFind(t, R){
+  R.clsCount[t.cls]++;
+  const p=pickPos(R,3), skins=shuffle(SKINS).slice(0,3);
+  const order=placeAt(t.answer, t.others, p);
+  return {type:'find', kind:t.kind, cls:t.cls, pic:t.pic, prompt:t.prompt, options:order.map((o,i)=>({word:o.word,cls:o.wordType,skin:skins[i]})), correct:p, focus:t.cls, answerWord:t.answer.word};
+}
+
+/* ===== Rundenplan ===== */
+const MODES = [
+ {id:1, key:'which', icon:'lupe', place:'Die Lupe', title:'Welche Wortart ist das?', fall:'Der erste Fall'},
+ {id:2, key:'sort', icon:'schrank', place:'Der Aktenschrank', title:'Sortiere die Beweise!', fall:'Fall Nr. 2'},
+ {id:3, key:'odd', icon:'spur', place:'Die Spurensuche', title:'Welches Wort gehört nicht dazu?', fall:'Fall Nr. 3'},
+ {id:4, key:'sent', icon:'pinnwand', place:'Die Pinnwand', title:'Wortarten im Satz', fall:'Fall Nr. 4'},
+ {id:5, key:'find', icon:'notizbuch', place:'Das Notizbuch', title:'Finde das passende Wort!', fall:'Fall Nr. 5'},
+ {id:6, key:'mix', icon:'fallakte', place:'Detektivzentrale', title:'Der große Wörterfall', fall:'Der große Fall'}
+];
+const MODE_BY_ID = {}; MODES.forEach(m=>MODE_BY_ID[m.id]=m);
+function oddPairs(){ /* 8 Paare (Mehrheit, Ausreißer): alle 6 möglichen Kombinationen + 2 weitere, gemischt */
+  const all=[]; CLASSES.forEach(a=>CLASSES.forEach(b=>{ if(a!==b) all.push([a,b]); }));
+  for(let t=0;t<200;t++){ const extra=shuffle(all).slice(0,2); const l=shuffle(all.concat(extra)); let ok=true; for(let i=1;i<l.length;i++) if(l[i][0]===l[i-1][0]&&l[i][1]===l[i-1][1]) ok=false; if(ok) return l; }
+  return shuffle(all.concat(all.slice(0,2))); }
+function mixTypes(){ /* 8 Aufgabenarten: jede der fünf mindestens einmal, nie zweimal direkt dieselbe */
+  const base=['which','sort','odd','sent','find'];
+  for(let t=0;t<500;t++){ const extra=[]; while(extra.length<3) extra.push(pick(base)); const l=shuffle(base.concat(extra)); let ok=true; for(let i=1;i<l.length;i++) if(l[i]===l[i-1]) ok=false;
+    // je Art höchstens zweimal
+    const cnt={}; l.forEach(x=>cnt[x]=(cnt[x]||0)+1); if(Object.values(cnt).some(v=>v>2)) ok=false; if(ok) return l; }
+  return base.concat(['which','sent','find']); }
+function makeRound(modeId, level){
+  const R=newRound(level), tasks=[];
+  const key=MODE_BY_ID[modeId].key;
+  if(key==='which'){ balancedList(ROUND_TARGET).forEach(c=>tasks.push(makeWhich(R,c))); }
+  else if(key==='sort'){ for(let i=0;i<ROUND_TARGET;i++) tasks.push(makeSort(R)); }
+  else if(key==='odd'){ oddPairs().forEach(([a,b])=>tasks.push(makeOdd(R,a,b))); }
+  else if(key==='sent'){ const cl=balancedList(ROUND_TARGET); const modes = level==='leicht' ? cl.map(()=>'single') : shuffle(level==='mittel'?['single','single','single','single','all','all','all','single']:['all','all','all','all','all','single','single','all']);
+    cl.forEach((c,i)=>tasks.push(makeSentence(R,c,modes[i]))); }
+  else if(key==='find'){ balancedList(ROUND_TARGET).forEach(c=>tasks.push(makeFind(R,c))); }
+  else { const types=mixTypes(); const cl=balancedList(types.filter(t=>t!=='sort').length); let ci=0, oddP=oddPairs();
+    types.forEach(t=>{ if(t==='sort') tasks.push(makeSort(R)); else if(t==='odd'){ const [a,b]=oddP.shift(); tasks.push(makeOdd(R,a,b)); ci++; }
+      else { const c=cl[ci++]; if(t==='which') tasks.push(makeWhich(R,c)); else if(t==='sent') tasks.push(makeSentence(R,c)); else tasks.push(makeFind(R,c)); } }); }
+  tasks.forEach((t,i)=>{ t.idx=i; });
+  return {R, tasks, mode:modeId, level};
+}
+
+/* ===== Prüfung einer Aufgabe (wird im Spiel unter #qa und in der Simulation genutzt) ===== */
+function validateTask(t, level){
+  const errs=[]; const E=m=>errs.push(m);
+  const lvOK = w => !!DIFF_W[level][w.difficulty] || w.id.startsWith('pn_') || w.id.startsWith('g_') || w.id.startsWith('gd_');
+  if(t.type==='which'){
+    if(t.options.length!==3 || new Set(t.options.map(o=>o.cls)).size!==3) E('which: Optionen nicht 3 verschiedene Wortarten');
+    if(t.options[t.correct].cls!==t.word.wordType || t.cls!==t.word.wordType) E('which: richtige Option passt nicht zum Wort');
+    if(t.options.filter(o=>o.cls===t.word.wordType).length!==1) E('which: nicht genau eine richtige Option');
+    if(new Set(t.options.map(o=>o.skin)).size!==3) E('which: Farben doppelt');
+    if(!lvOK(t.word)) E('which: Wort nicht in Stufe');
+  } else if(t.type==='sort'){
+    if(!SORT_SIZES[level].includes(t.words.length)) E('sort: falsche Anzahl '+t.words.length);
+    if(new Set(t.words.map(w=>w.id)).size!==t.words.length) E('sort: Wort doppelt');
+    CLASSES.forEach(c=>{ if(!t.words.some(w=>w.wordType===c)) E('sort: Wortart fehlt '+c); });
+    const cc={}; t.words.forEach(w=>cc[w.category]=(cc[w.category]||0)+1); if(Object.values(cc).some(v=>v>(t.words.length<=4?1:2))) E('sort: zu viele aus einer Kategorie');
+    const gg=t.words.filter(w=>w.group).map(w=>w.group); if(new Set(gg).size!==gg.length) E('sort: gleicher Wortstamm');
+    t.words.forEach(w=>{ if(!lvOK(w)) E('sort: Wort nicht in Stufe '+w.word); });
+  } else if(t.type==='odd'){
+    if(t.words.length!==4) E('odd: nicht 4 Wörter');
+    const odd=t.words[t.odd]; const rest=t.words.filter((w,i)=>i!==t.odd);
+    if(!rest.every(w=>w.wordType===t.majorCls)) E('odd: Mehrheit nicht einheitlich');
+    if(odd.wordType===t.majorCls) E('odd: Ausreißer hat gleiche Wortart');
+    if(t.words.filter(w=>w.wordType!==t.majorCls).length!==1) E('odd: nicht genau ein Ausreißer');
+    if(new Set(rest.map(w=>w.category)).size!==3) E('odd: Mehrheit aus gleicher Kategorie');
+    if(new Set(t.words.map(w=>w.id)).size!==4) E('odd: Wort doppelt');
+    const gg=t.words.filter(w=>w.group).map(w=>w.group); if(new Set(gg).size!==gg.length) E('odd: gleicher Wortstamm');
+    t.words.forEach(w=>{ if(!lvOK(w)) E('odd: Wort nicht in Stufe '+w.word); });
+  } else if(t.type==='sent'){
+    const toks=t.sent.tokens; const real=[]; toks.forEach((x,j)=>{ if(x.c===t.q.cls) real.push(j); });
+    if(JSON.stringify(real)!==JSON.stringify(t.q.targets)) E('sent: Ziele passen nicht zu den Markierungen');
+    if(t.q.mode==='single' && real.length!==1) E('sent: single, aber '+real.length+' Lösungen');
+    if(t.q.mode==='all' && real.length<2) E('sent: all, aber '+real.length+' Lösungen');
+    if(t.q.cls==='V' && t.sent.hasSein) E('sent: Verb-Frage bei Satz mit sein/haben');
+    if(level==='leicht' && t.q.mode!=='single') E('sent: leicht ohne eindeutige Lösung');
+    if(level==='leicht' && toks.length>6) E('sent: leicht zu lang');
+    if(level==='schwer' && toks.length<7) E('sent: schwer zu kurz');
+  } else if(t.type==='find'){
+    if(t.options.length!==3 || new Set(t.options.map(o=>o.cls)).size!==3) E('find: Optionen nicht 3 verschiedene Wortarten');
+    if(t.options[t.correct].cls!==t.cls) E('find: richtige Option hat falsche Wortart');
+    if(t.options.filter(o=>o.cls===t.cls).length!==1) E('find: nicht genau eine passende Option');
+    if(t.kind==='gap'){ const g=GAPS.find(x=>x.id===t.gapId); if(!g || t.options[t.correct].word!==g.answer) E('find: Lücke – falsche Lösung'); }
+    if(t.kind==='picV'){ const s=VERB_SCENES.find(x=>x.pic===t.pic); if(!s || t.options[t.correct].word!==s.verb) E('find: Verb passt nicht zum Bild'); if(s && t.options.some(o=>o.cls==='N' && s.nouns.includes(o.word))) E('find: Ablenker im Bild sichtbar'); if(s && t.options.some(o=>o.cls==='A' && s.noAdj.includes(o.word))) E('find: Adjektiv-Ablenker passt zum Bild'); }
+    if(t.kind==='picA'){ const s=ADJ_PICS.find(x=>x.pic===t.pic && x.adj===t.options[t.correct].word); if(!s) E('find: Adjektiv passt nicht zum Bild'); }
+    if(t.kind==='picN'){ const w=WORD_BY_TEXT[t.options[t.correct].word]; if(!w || w.illustrationOptional!==t.pic) E('find: Nomen passt nicht zum Bild'); }
+    if(t.options.some(o=>!o.word)) E('find: leere Option');
+  }
+  return errs;
+}
+/* ===== Texte: Merkhilfen, Hinweise, Hilfe – sprachlich geprüft, nicht absolut formuliert ===== */
+const SUB_PHRASE = {gebaeude:'ein Gebäude', tier:'ein Tier', mensch:'einen Menschen', ding:'einen Gegenstand', pflanze:'eine Pflanze', natur:'etwas in der Natur', essen:'etwas zum Essen', ort:'einen Ort'};
+function rotate(R, key, n){ R.texts[key]=((R.texts[key]===undefined?randInt(0,n-1):R.texts[key]+1))%n; return R.texts[key]; }
+/* Merkhilfe nach richtiger Antwort – wechselt, damit nicht immer derselbe Satz erscheint */
+function explainWord(R, w){
+  const W=cap(w.word), q='„'+w.word+'“';
+  if(w.wordType==='N'){
+    const list=[ `${q} ist ein Nomen und wird großgeschrieben.`, `Du kannst „${w.art} ${w.word}“ sagen. Das passt zu einem Nomen.` ];
+    if(SUB_PHRASE[w.sub]) list.push(`${W} bezeichnet ${SUB_PHRASE[w.sub]}. Das ist ein Nomen.`);
+    return list[rotate(R,'N',list.length)];
+  }
+  if(w.wordType==='V'){
+    const list = w.sub==='vorgang'
+      ? [ `${q} sagt, was passiert. Das ist ein Verb.`, `${q} ist ein Verb. Es sagt, was geschieht.` ]
+      : [ `${q} sagt, was jemand tut.`, `Jemand kann ${w.word}. Darum ist es ein Verb.`, `${q} ist ein Verb. Es sagt, was man tun kann.` ];
+    return list[rotate(R,'V',list.length)];
+  }
+  const who = w.sub==='person' ? 'jemand' : w.sub==='sache' ? 'etwas' : 'jemand oder etwas';
+  const list=[ `${q} beschreibt, wie ${who} ist.`, `Wie ist ${who}? ${W}! Das ist ein Adjektiv.`, `${q} ist ein Adjektiv. Es sagt, wie ${who} sein kann.` ];
+  return list[rotate(R,'A',list.length)];
+}
+/* Hinweis nach falscher Antwort – verrät die Lösung nicht, passt zum Wort */
+function hintWord(w, attempt){
+  const q='„'+w.word+'“';
+  const H = {
+   N:[ `Setz „der“, „die“ oder „das“ vor ${q}. Klingt das richtig?`,
+       `Schau auf den ersten Buchstaben von ${q}. Wie schreibt man Nomen?`,
+       SUB_PHRASE[w.sub] ? `Was bezeichnet ${q}? Denk an Menschen, Tiere, Dinge oder Pflanzen.` : `Kannst du „der“, „die“ oder „das“ vor ${q} setzen?` ],
+   V:[ w.sub==='vorgang' ? `Passiert das manchmal? Sagt ${q}, was geschieht?` : `Kann jemand ${q}? Ist es etwas, das man tut?`,
+       `Lies ${q} noch einmal. Sagt das Wort, was jemand tut oder was passiert?`,
+       `Passt „der“, „die“ oder „das“ vor ${q}? Probier es aus.` ],
+   A:[ `Kann man mit ${q} beschreiben, wie jemand oder etwas ist?`,
+       `Wie ist etwas? Passt ${q} zu dieser Frage?`,
+       `Passt „der“, „die“ oder „das“ vor ${q}? Probier es aus.` ]
+  };
+  const l=H[w.wordType]; return l[attempt % l.length];
+}
+const HINT_GENERIC = ['Schau dir das Wort noch einmal genau an.','Lies in Ruhe noch einmal. Du schaffst das!','Probier es noch einmal.'];
+function hintSort(w, attempt){ return hintWord(w, attempt); }
+/* Satzaufgabe: falsches Wort angetippt */
+function hintSent(tok, askCls, attempt){
+  if(tok.c==='-') return `„${tok.w}“ gehört zu keiner der drei Wortarten. Such weiter!`;
+  const ask = {N:'ein Nomen',V:'ein Verb',A:'ein Adjektiv'}[askCls];
+  const base = `„${tok.w}“ ist ${ {N:'ein Nomen',V:'ein Verb',A:'ein Adjektiv'}[tok.c] }. Gesucht wird ${ask}.`;
+  const tip = {N:'Nomen schreibt man groß.', V:'Ein Verb sagt, was jemand tut oder was passiert.', A:'Ein Adjektiv beschreibt, wie jemand oder etwas ist.'}[askCls];
+  return attempt%2===0 ? base : `${base} ${tip}`;
+}
+function hintSentAll(sel, targets, tokens, askCls){
+  const wrong = sel.filter(i=>!targets.includes(i)), missing = targets.filter(i=>!sel.includes(i));
+  if(!sel.length) return 'Tippe zuerst die passenden Wörter an.';
+  if(wrong.length) return `Mindestens ein markiertes Wort ist kein ${CLS_NAME[askCls]}. Schau noch einmal genau hin.`;
+  return 'Das stimmt schon – aber es fehlen noch Wörter. Such weiter!';
+}
+const SENT_REMIND = {N:['Nomen schreibt man groß.','Vor ein Nomen passt oft „der“, „die“ oder „das“.'], V:['Verben sagen, was jemand tut oder was passiert.'], A:['Adjektive beschreiben, wie jemand oder etwas ist.']};
+function explainSent(R, cls){ const l=SENT_REMIND[cls]; return l[rotate(R,'sent'+cls,l.length)]; }
+/* Ausreißer: Hinweise */
+function hintOdd(t, w, attempt){
+  const l=[ 'Schau, zu welcher Wortart die Wörter gehören. Welches passt nicht?', `Zu welcher Wortart gehört ${'„'+w.word+'“'}? Gehören die anderen auch dazu?`, 'Drei Wörter haben etwas gemeinsam. Eins nicht. Lies noch einmal alle vier.' ];
+  return l[attempt%l.length];
+}
+const FIND_HINT = {
+  picN:['Was siehst du auf dem Bild? Das gesuchte Wort bezeichnet es.', 'Welches Wort ist ein Nomen? Es wird großgeschrieben.'],
+  picV:['Was tut das Kind auf dem Bild? Das gesuchte Wort sagt es.', 'Ein Verb sagt, was jemand tut. Was passt zum Bild?'],
+  picA:['Wie ist es auf dem Bild? Das gesuchte Wort beschreibt es.', 'Ein Adjektiv beschreibt, wie etwas ist. Was passt zum Bild?'],
+  gapN:['Lies den Satz. Welches Nomen passt in die Lücke?', 'Probier jedes Wort in der Lücke aus. Klingt der Satz richtig?'],
+  gapV:['Lies den Satz. Welches Verb passt in die Lücke?', 'Probier jedes Wort in der Lücke aus. Klingt der Satz richtig?'],
+  gapA:['Lies den Satz. Welches Adjektiv passt in die Lücke?', 'Probier jedes Wort in der Lücke aus. Klingt der Satz richtig?'],
+  gapOpen:['Lies den Satz und probier jedes Wort in der Lücke aus. Klingt der Satz richtig?','Welches Wort passt grammatisch und vom Sinn her in die Lücke?']
+};
+function hintFind(t, o, attempt){
+  const key = t.kind==='gap' ? (t.open?'gapOpen':'gap'+t.cls) : t.kind;
+  const l=FIND_HINT[key];
+  const wrongCls = o.cls!==t.cls && !t.open && ' „'+o.word+'“ ist '+ ({N:'ein Nomen',V:'ein Verb',A:'ein Adjektiv'}[o.cls]) +'. ' ;
+  return (attempt%2===0 && wrongCls ? wrongCls.trim()+' ' : '')+l[attempt%l.length];
+}
+const PRAISE = ['Super!','Richtig!','Prima!','Toll gemacht!','Gut erkannt!','Klasse!','Gut gespürt!'];
+const STEP_NAMES = ['Fußspur','Schlüssel','Fingerabdruck','Brief','Feder','Knopf','Taschenuhr','Hut'];
+const HELP = [
+  {cls:'N', title:'NOMEN', alt:'Namenwörter', text:['Nomen bezeichnen z. B. Menschen, Tiere, Dinge oder Pflanzen.','Sie werden großgeschrieben.','Oft passt „der“, „die“ oder „das“ davor.'], ex:['Hund','Schule','Blume']},
+  {cls:'V', title:'VERBEN', alt:'Tunwörter', text:['Verben sagen häufig, was jemand tut oder was passiert.'], ex:['laufen','lachen','schlafen']},
+  {cls:'A', title:'ADJEKTIVE', alt:'Wiewörter', text:['Adjektive beschreiben, wie jemand oder etwas ist.'], ex:['groß','leise','fröhlich']}
+];
+/* ===== Oberfläche ===== */
+const $ = id => document.getElementById(id);
+function el(tag, cls, html){ const e=document.createElement(tag); if(cls) e.className=cls; if(html!==undefined) e.innerHTML=html; return e; }
+const state = { mode:null, level:null, sound:true, plan:null, found:0, task:null, locked:false, wrong:0, attempts:{} };
+let timers=[]; function after(ms,fn){ const id=setTimeout(()=>{ timers=timers.filter(t=>t!==id); try{ fn(); }catch(e){ state.locked=false; } },ms); timers.push(id); return id; }
+function clearTimers(){ timers.forEach(clearTimeout); timers=[]; }
+
+/* ---- Sprachausgabe (SpeechSynthesis, de-DE). Das Spiel funktioniert auch ohne. ---- */
+let voices=[];
+function loadVoices(){ try{ voices = window.speechSynthesis.getVoices()||[]; }catch(e){ voices=[]; } }
+function speechOk(){ try{ return 'speechSynthesis' in window && typeof window.SpeechSynthesisUtterance!=='undefined' && !!window.speechSynthesis; }catch(e){ return false; } }
+function soundActive(){ return state.sound && speechOk(); }
+function mkUtter(text){ const u=new SpeechSynthesisUtterance(text); u.lang='de-DE'; u.rate=.85; u.pitch=1; const v=voices.find(v=>/^de[-_]/i.test(v.lang)) || voices.find(v=>/^de/i.test(v.lang)); if(v) u.voice=v; return u; }
+function say(text){ if(!soundActive()) return; try{ const s=window.speechSynthesis; s.cancel(); s.speak(mkUtter(text)); }catch(e){} }
+function sayList(list){ if(!soundActive()) return; try{ const s=window.speechSynthesis; s.cancel(); list.forEach(t=>s.speak(mkUtter(t))); }catch(e){} }
+function stopSay(){ try{ if(speechOk()) window.speechSynthesis.cancel(); }catch(e){} }
+if(speechOk()){ loadVoices(); try{ window.speechSynthesis.addEventListener('voiceschanged',loadVoices); }catch(e){} }
+const SPEAKER = `<svg viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M6,18 H16 L28,8 V40 L16,30 H6Z" fill="currentColor"/><path class="wave" d="M33,17 Q39,24 33,31 M38,11 Q48,24 38,37" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round"/><path class="slash" d="M6,6 L44,44" stroke="currentColor" stroke-width="4.6" stroke-linecap="round"/></svg>`;
+function applySound(){
+  ['btn-sound','btn-sound2'].forEach(id=>{
+    const b=$(id); b.innerHTML=SPEAKER; b.setAttribute('aria-pressed', String(soundActive()));
+    b.disabled = !speechOk();
+    b.setAttribute('aria-label', !speechOk() ? 'Sprachausgabe ist in diesem Browser nicht verfügbar' : state.sound ? 'Sprachausgabe ist an. Zum Ausschalten drücken.' : 'Sprachausgabe ist aus. Zum Einschalten drücken.');
+    b.title = !speechOk() ? 'Keine Sprachausgabe verfügbar' : state.sound ? 'Sprachausgabe an' : 'Sprachausgabe aus';
+    if(!speechOk()) b.style.opacity='.45';
+  });
+  document.body.classList.toggle('nosound', !soundActive());
+}
+function toggleSound(){ if(!speechOk()) return; state.sound=!state.sound; if(!state.sound) stopSay(); applySound(); }
+function speakBtn(getText, label){
+  const b=el('button','spk'); b.type='button'; b.innerHTML=SPEAKER; b.setAttribute('aria-label', label||'Vorlesen'); b.title=label||'Vorlesen';
+  b.addEventListener('click',()=>{ const t=getText(); if(Array.isArray(t)) sayList(t); else say(t); }); return b;
+}
+const IC_OK=`<svg class="ficon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="#4f6f52"/><path d="M9 16.5 L14 21.5 L23 11" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const IC_HINT=`<svg class="ficon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="#8a6516"/><text x="16" y="23" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="20" fill="#fff">?</text></svg>`;
+const IC_INFO=`<svg class="ficon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="#2f5d62"/><path d="M16 14 V23" stroke="#fff" stroke-width="3.4" stroke-linecap="round"/><circle cx="16" cy="9.5" r="2.1" fill="#fff"/></svg>`;
+const STAR=`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6.5" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M15 15 L21 21" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/></svg>`;
+
+/* ---- Bildschirme ---- */
+let lastFocus=null;
+function showScreen(name){
+  ['start','game','end'].forEach(n=>{ $('screen-'+n).hidden = n!==name; });
+  clearTimers(); stopSay(); state.locked=false;
+  if(name==='start'){ const f=document.querySelector('.folder'); if(lastFocus&&document.contains(lastFocus)) lastFocus.focus(); else if(f) f.focus({preventScroll:true}); }
+}
+function announce(t){ const s=$('sr'); s.textContent=''; setTimeout(()=>{ s.textContent=t; },30); }
+function setFb(kind, head, text){
+  const f=$('fb'); f.className=kind||''; if(!kind){ f.innerHTML=''; return; }
+  const ic = kind==='ok'?IC_OK:kind==='hint'?IC_HINT:IC_INFO;
+  f.innerHTML = ic+`<div>${head?`<span class="fh">${head}</span>`:''}${text?`<span>${text}</span>`:''}</div>`;
+}
+
+/* ---- Startseite ---- */
+function buildStart(){
+  $('deco-l').innerHTML=HQ_LEFT; $('deco-r').innerHTML=HQ_RIGHT; $('desk-l').innerHTML=DESK_LEFT; $('desk-r').innerHTML=DESK_RIGHT;
+  const box=$('folders'); box.innerHTML='';
+  MODES.forEach(m=>{
+    const b=el('button','folder'); b.type='button'; b.dataset.fall=m.fall; b.dataset.mode=m.id;
+    b.setAttribute('aria-label',`${m.fall}: ${m.title}. Ort: ${m.place}.`);
+    b.innerHTML=`<div class="ico">${modeIcon(m.icon)}</div><div class="lbl"><span class="pl">${m.place}</span><span class="ti">${m.title}</span></div>`;
+    b.addEventListener('click',()=>openLevel(m.id,b)); box.appendChild(b);
+  });
+}
+const LEVEL_INFO = {leicht:['LEICHT','kurze, bekannte Wörter',1], mittel:['MITTEL','mehr Wörter und kurze Sätze',2], schwer:['SCHWER','längere Sätze, weniger Hilfen',3]};
+let pendingMode=null;
+function trapKeys(dlg, closeFn){
+  dlg.addEventListener('keydown',e=>{
+    if(e.key==='Escape'){ e.preventDefault(); closeFn(); return; }
+    if(e.key!=='Tab') return;
+    const f=[...dlg.querySelectorAll('button:not([disabled])')].filter(x=>x.offsetParent!==null); if(!f.length) return;
+    const first=f[0], last=f[f.length-1];
+    if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+    else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
+  });
+}
+function openLevel(modeId, opener){
+  pendingMode=modeId; lastFocus=opener||null; const m=MODE_BY_ID[modeId];
+  $('lvl-ico').innerHTML=modeIcon(m.icon); $('lvl-pl').textContent=m.fall+' · '+m.place; $('lvl-t').textContent=m.title;
+  const box=$('lvl-btns'); box.innerHTML='';
+  LEVELS.forEach(l=>{ const [name,desc,n]=LEVEL_INFO[l]; const b=el('button','lvl'); b.type='button'; b.dataset.level=l;
+    b.innerHTML=`<b>${name}</b><span class="stars" aria-hidden="true">${[1,2,3].map(i=>STAR.replace('<svg','<svg class="'+(i<=n?'on':'off')+'"')).join('')}</span><small>${desc}</small>`;
+    b.setAttribute('aria-label',`${name.charAt(0)+name.slice(1).toLowerCase()}: ${desc}`);
+    b.addEventListener('click',()=>{ closeLevel(true); startRound(modeId,l); }); box.appendChild(b); });
+  $('dlg-level').hidden=false; box.firstChild.focus();
+}
+function closeLevel(keep){ $('dlg-level').hidden=true; if(!keep && lastFocus) lastFocus.focus(); }
+function openHelp(){
+  lastFocus = document.activeElement;
+  const g=$('help-grid'); g.innerHTML='';
+  HELP.forEach(h=>{ const c=el('div','hcard'); c.innerHTML=`<h3>${h.title}</h3><p class="alt">(${h.alt})</p>${h.text.map(t=>`<p>${t}</p>`).join('')}<div class="exs">${h.ex.map(x=>`<span>${x}</span>`).join('')}</div>`; g.appendChild(c); });
+  $('dlg-help').hidden=false; $('help-close').focus();
+}
+function closeHelp(){ $('dlg-help').hidden=true; if(lastFocus&&document.contains(lastFocus)) lastFocus.focus(); }
+
+/* ---- Fallakte (Fortschritt) ---- */
+function buildFallakte(){
+  const f=$('fallakte'); f.innerHTML='';
+  f.appendChild(el('div','fa-label','<b>FALLAKTE</b><span id="fa-count">0 von 8 Hinweisen</span>'));
+  const slots=el('div','fa-slots');
+  let th=''; for(let i=0;i<7;i++){ th+=`<path data-t="${i}" d="M${(i+.5)*100} 4 Q${(i+1)*100} 34 ${(i+1.5)*100} 4"/>`; }
+  slots.appendChild(el('div','',`<svg class="fa-thread" viewBox="0 0 800 100" preserveAspectRatio="none" aria-hidden="true">${th}</svg>`).firstChild);
+  for(let i=0;i<ROUND_TARGET;i++){ const c=el('div','clue locked'); c.dataset.i=i; c.setAttribute('role','img'); c.setAttribute('aria-label',`Hinweis ${i+1}: noch nicht gefunden`); c.innerHTML=`<span class="pin"></span>${clueSvg(i)}<span class="num">${i+1}</span>`; slots.appendChild(c); }
+  f.appendChild(slots);
+  $('gb-cnt').textContent='Hinweise 0/8';
+}
+function updateFallakte(n, animate){
+  document.querySelectorAll('#fallakte .clue').forEach((c,i)=>{
+    if(i<n){ c.classList.remove('locked'); c.classList.add('on'); c.setAttribute('aria-label',`Hinweis ${i+1}: ${STEP_NAMES[i]} gefunden`); if(animate && i===n-1){ c.classList.remove('pop'); void c.offsetWidth; c.classList.add('pop'); c.addEventListener('animationend',()=>c.classList.remove('pop'),{once:true}); } }
+  });
+  document.querySelectorAll('#fallakte .fa-thread path').forEach((p,i)=>{ if(i<n-1) p.classList.add('on'); });
+  const t=$('fa-count'); if(t) t.textContent=`${n} von ${ROUND_TARGET} Hinweisen`;
+  $('gb-cnt').textContent=`Hinweise ${n}/${ROUND_TARGET}`;
+}
+
+/* ---- Rundenablauf ---- */
+function startRound(modeId, level){
+  state.mode=modeId; state.level=level; state.plan=makeRound(modeId,level); state.found=0; state.locked=false;
+  const m=MODE_BY_ID[modeId];
+  $('gb-fall').textContent=m.fall; $('gb-title').textContent=m.title; $('gb-lv').textContent=LEVEL_INFO[level][0];
+  showScreen('game'); buildFallakte(); renderTask();
+}
+function renderTask(){
+  clearTimers(); stopSay(); state.locked=false; state.wrong=0; state.attempts={};
+  const t=state.plan.tasks[state.found]; state.task=t;
+  const st=$('stage'); st.innerHTML=''; setFb('',''); $('btn-next').hidden=true;
+  const old=document.querySelector('.fa-stamp'); if(old) old.remove();
+  RENDER[t.type](t, st);
+  st.setAttribute('tabindex','-1');
+  announce(`Aufgabe ${state.found+1} von ${ROUND_TARGET}. ${st.querySelector('.prompt')?st.querySelector('.prompt').textContent:''}`);
+}
+function solved(head, text, speech){
+  state.locked=true; state.found++;
+  setFb('ok', head, text);
+  updateFallakte(state.found,true);
+  const last=state.found>=ROUND_TARGET; const nb=$('btn-next'); nb.textContent = last ? 'Fall abschließen' : 'Weiter'; nb.hidden=false;
+  if(last){ const s=el('div','fa-stamp',stampSvg('FALL GELÖST!')); $('fallakte').appendChild(s); }
+  announce(`Richtig. Hinweis ${state.found} von ${ROUND_TARGET}: ${STEP_NAMES[state.found-1]} gefunden.`);
+  if(speech) say(speech);
+  after(60,()=>{ try{ nb.focus({preventScroll:true}); }catch(e){} });
+}
+function wrong(text){ state.wrong++; setFb('hint','Noch nicht ganz.',text); }
+function nextTask(){ if(state.found>=ROUND_TARGET){ endRound(); return; } renderTask(); const st=$('stage'); try{ st.focus({preventScroll:true}); }catch(e){} }
+function endRound(){
+  showScreen('end');
+  $('end-stamp').innerHTML=stampSvg('FALL GELÖST!','stampbig'); $('end-scene').innerHTML=endSceneSvg();
+  $('end-h').textContent='Du hast alle Hinweise gefunden.';
+  announce('Fall gelöst! Du hast alle Hinweise gefunden.'); say('Fall gelöst! Du hast alle Hinweise gefunden.');
+  $('btn-again').focus();
+}
+const lower = s => s;
+const RENDER = {};
+
+/* ================= Modus 1: Welche Wortart ist das? ================= */
+RENDER.which = function(t, st){
+  const root=el('div','task t-which');
+  root.appendChild(el('p','prompt','Welche Wortart ist das?'));
+  const card=el('div','wcard-big');
+  if(t.pic){ const f=el('div','figure'); f.innerHTML=artSvg(t.pic); card.appendChild(f); }
+  card.appendChild(el('span','word',t.word.word));
+  card.appendChild(speakBtn(()=>t.word.word,'Wort vorlesen'));
+  root.appendChild(card);
+  const ans=el('div','answers'); const btns=[];
+  t.options.forEach((o,i)=>{
+    const b=el('button','abtn '+o.skin,CLS_UP[o.cls]); b.type='button'; btns.push(b);
+    b.addEventListener('click',()=>{
+      if(state.locked||b.disabled) return;
+      if(i===t.correct){
+        btns.forEach(x=>{ x.disabled=true; if(x!==b) x.classList.add('dim'); }); b.classList.add('right'); b.disabled=true;
+        solved(`${t.word.word} → ${CLS_UP[t.cls]}`, explainWord(state.plan.R,t.word), `${t.word.word}. ${CLS_NAME[t.cls]}.`);
+      } else { b.disabled=true; b.classList.add('tried'); const n=state.wrong; wrong(hintWord(t.word, n)); }
+    });
+    ans.appendChild(b);
+  });
+  root.appendChild(ans); st.appendChild(root);
+};
+
+/* ================= Modus 2: Sortiere die Beweise! ================= */
+RENDER.sort = function(t, st){
+  const root=el('div','task t-sort');
+  root.appendChild(el('p','prompt','Sortiere die Wörter in die richtigen Fächer.'));
+  const tray=el('div','tray'); tray.setAttribute('role','group'); tray.setAttribute('aria-label','Wortkarten');
+  const drawers=el('div','drawers'); const dEls={};
+  const spkRow=el('div','odd-tools'); 
+  let sel=null, remaining=t.words.length;
+  function select(c){ if(sel===c){ c.classList.remove('sel'); c.setAttribute('aria-pressed','false'); sel=null; setFb('',''); return; }
+    if(sel){ sel.classList.remove('sel'); sel.setAttribute('aria-pressed','false'); }
+    sel=c; c.classList.add('sel'); c.setAttribute('aria-pressed','true'); setFb('info','Wort gewählt: '+c.dataset.word,'Tippe jetzt auf das Fach, in das es passt.'); say(c.dataset.word); }
+  function place(c, d){
+    if(state.locked||!c||c.classList.contains('in')) return;
+    const w=WORD_BY_ID[c.dataset.id];
+    if(w.wordType===d.dataset.cls){
+      const chip=el('span','wc in',w.word); d.querySelector('.slot').appendChild(chip);
+      c.remove(); sel=null; remaining--;
+      if(remaining===0){
+        document.querySelectorAll('.drawer').forEach(x=>x.classList.add('done')); tray.style.minHeight='0';
+        const parts=CLASSES.map(k=>{ const ws=t.words.filter(x=>x.wordType===k).map(x=>x.word); return ws.length?`${CLS_PL[k]}: ${ws.join(', ')}`:''; }).filter(Boolean);
+        solved('Alle Beweise liegen im richtigen Fach!', parts.join(' · '), 'Alles richtig sortiert!');
+      } else { setFb('ok','Passt!',explainWord(state.plan.R,w)); say(w.word); }
+    } else {
+      c.classList.remove('sel'); c.setAttribute('aria-pressed','false'); sel=null;
+      state.attempts[w.id]=(state.attempts[w.id]||0)+1; state.wrong++;
+      setFb('hint',`„${w.word}“ passt hier noch nicht.`, hintSort(w, state.attempts[w.id]-1));
+    }
+  }
+  t.words.forEach(w=>{
+    const c=el('button','wc',w.word); c.type='button'; c.dataset.id=w.id; c.dataset.word=w.word; c.setAttribute('aria-pressed','false');
+    c.addEventListener('click',()=>{ if(c._dragged){ c._dragged=false; return; } if(state.locked) return; select(c); });
+    attachDrag(c, d=>place(c,d), ()=>{ if(sel!==c) select(c); }, ()=>state.locked||c.classList.contains('in'), '.drawer');
+    tray.appendChild(c);
+  });
+  CLASSES.forEach(k=>{
+    const d=el('div','drawer'); d.dataset.cls=k; d.setAttribute('role','group'); d.setAttribute('aria-label','Fach '+CLS_UP_PL[k]);
+    const pl=el('button','plate',CLS_UP_PL[k]); pl.type='button'; pl.setAttribute('aria-label','Ausgewähltes Wort in das Fach '+CLS_UP_PL[k]+' legen');
+    d.appendChild(pl); d.appendChild(el('div','slot'));
+    d.addEventListener('click',()=>{ if(state.locked) return; if(!sel){ setFb('info','Wähle zuerst ein Wort.','Tippe ein Wort an und dann das passende Fach – oder zieh das Wort hinein.'); return; } place(sel,d); });
+    dEls[k]=d; drawers.appendChild(d);
+  });
+  root.appendChild(tray); root.appendChild(drawers);
+  const sp=speakBtn(()=>t.words.map(w=>w.word),'Alle Wörter vorlesen'); spkRow.appendChild(sp); tray.appendChild(sp);
+  st.appendChild(root);
+};
+/* Ziehen mit Maus/Finger (Zeiger-Ereignisse). Tippen-Alternative läuft über click. */
+function attachDrag(card, onDrop, onStart, isBlocked, targetSel){
+  let start=null, ghost=null, moved=false, over=null;
+  card.addEventListener('pointerdown',e=>{
+    if(isBlocked()) return; if(e.pointerType==='mouse' && e.button!==0) return;
+    start={x:e.clientX,y:e.clientY,id:e.pointerId}; moved=false; card._dragged=false;
+    try{ card.setPointerCapture(e.pointerId); }catch(_){}
+  });
+  card.addEventListener('pointermove',e=>{
+    if(!start||e.pointerId!==start.id) return;
+    const dx=e.clientX-start.x, dy=e.clientY-start.y;
+    if(!moved && Math.hypot(dx,dy)>8){
+      moved=true; ghost=card.cloneNode(true); ghost.classList.add('ghost'); ghost.classList.remove('sel'); ghost.style.width=card.offsetWidth+'px'; document.body.appendChild(ghost); card.classList.add('drag-src'); onStart();
+    }
+    if(moved){
+      ghost.style.left=(e.clientX-ghost.offsetWidth/2)+'px'; ghost.style.top=(e.clientY-ghost.offsetHeight/2)+'px';
+      const under=document.elementFromPoint(e.clientX,e.clientY), tg=under&&under.closest?under.closest(targetSel):null;
+      if(over&&over!==tg) over.classList.remove('over'); over=tg; if(tg) tg.classList.add('over');
+    }
+  });
+  const end=e=>{
+    if(!start||e.pointerId!==start.id) return;
+    const wasMoved=moved; start=null; moved=false;
+    if(ghost){ ghost.remove(); ghost=null; } card.classList.remove('drag-src'); if(over){ over.classList.remove('over'); over=null; }
+    if(wasMoved){
+      card._dragged=true; setTimeout(()=>{ card._dragged=false; },60);
+      if(e.type==='pointerup'){ const under=document.elementFromPoint(e.clientX,e.clientY), tg=under&&under.closest?under.closest(targetSel):null; if(tg) onDrop(tg); else { card.classList.remove('sel'); card.setAttribute('aria-pressed','false'); } }
+    }
+  };
+  card.addEventListener('pointerup',end); card.addEventListener('pointercancel',end);
+}
+
+/* ================= Modus 3: Welches Wort gehört nicht dazu? ================= */
+RENDER.odd = function(t, st){
+  const root=el('div','task t-odd');
+  root.appendChild(el('p','prompt','Welches Wort gehört nicht dazu?'));
+  const cards=el('div','cards'); const skins=shuffle(SKINS); const btns=[];
+  t.words.forEach((w,i)=>{
+    const b=el('button','tcard '+skins[i%5],`<span class="no" aria-hidden="true">Spur ${i+1}</span>${w.word}`); b.type='button'; btns.push(b);
+    b.addEventListener('click',()=>{
+      if(state.locked||b.disabled) return;
+      if(i===t.odd){
+        btns.forEach((x,j)=>{ x.disabled=true; if(j!==i) x.classList.add('same'); }); b.classList.add('right');
+        const rest=t.words.filter((x,j)=>j!==i).map(x=>x.word);
+        solved(`${w.word} → ${CLS_UP[t.oddCls]}`, `${rest.join(' • ')} → ${CLS_UP_PL[t.majorCls]}`, `${w.word} gehört nicht dazu. ${w.word} ist ${ {N:'ein Nomen',V:'ein Verb',A:'ein Adjektiv'}[t.oddCls] }.`);
+      } else { b.disabled=true; b.classList.add('tried'); wrong(hintOdd(t,w,state.wrong)); }
+    });
+    cards.appendChild(b);
+  });
+  root.appendChild(cards);
+  const row=el('div','odd-tools'); row.appendChild(speakBtn(()=>t.words.map(w=>w.word),'Alle Wörter vorlesen')); root.appendChild(row);
+  st.appendChild(root);
+};
+
+/* ================= Modus 4: Wortarten im Satz ================= */
+RENDER.sent = function(t, st){
+  const root=el('div','task t-sent'); const q=t.q, S=t.sent;
+  const name=CLS_NAME[q.cls], pl=CLS_PL[q.cls];
+  const art = q.mode==='single' ? (q.cls==='N'?'das':'das') : 'alle';
+  root.appendChild(el('p','prompt', q.mode==='single' ? `Finde das <span class="tag">${name}</span>.` : `Finde alle <span class="tag">${pl}</span>.`));
+  const board=el('div','board'), note=el('div','note'); const toks=el('div','toks'); const els=[];
+  S.tokens.forEach((tk,j)=>{
+    const b=el('button','tok',`<span class="w">${tk.w}${tk.p}</span><span class="tg" aria-hidden="true" style="visibility:hidden">Adjektiv</span>`); b.type='button'; b.dataset.j=j; els.push(b);
+    b.setAttribute('aria-label',tk.w+(q.mode==='all'?'':'')); b.setAttribute('aria-pressed','false');
+    b.addEventListener('click',()=>{
+      if(state.locked||b.disabled) return;
+      if(q.mode==='single'){
+        if(q.targets.includes(j)){ finish(); }
+        else { b.disabled=true; b.classList.add('tried'); const n=state.wrong; wrong(hintSent(tk,q.cls,n)); }
+      } else {
+        const on=!b.classList.contains('picked'); b.classList.toggle('picked',on); b.setAttribute('aria-pressed',String(on));
+      }
+    });
+    toks.appendChild(b);
+  });
+  function reveal(){
+    els.forEach((b,j)=>{ const tk=S.tokens[j]; b.disabled=true; const tg=b.querySelector('.tg');
+      if(tk.c!=='-'){ tg.textContent=CLS_NAME[tk.c]; tg.style.visibility='visible'; }
+      if(q.targets.includes(j)){ b.classList.remove('picked','tried'); b.classList.add('right'); } });
+  }
+  function finish(){
+    reveal();
+    const words=q.targets.map(j=>S.tokens[j].w);
+    const head = q.mode==='single' ? `${words[0]} → ${CLS_UP[q.cls]}` : `${words.join(', ')} → ${CLS_UP_PL[q.cls]}`;
+    solved(head, explainSent(state.plan.R,q.cls), S.text);
+  }
+  note.appendChild(toks); note.appendChild(speakBtn(()=>S.text,'Satz vorlesen')); board.appendChild(note); root.appendChild(board);
+  if(q.mode==='all'){
+    const act=el('div','actions'); const ok=el('button','btn pri','Fertig'); ok.type='button';
+    ok.addEventListener('click',()=>{ if(state.locked) return;
+      const sel=els.map((b,j)=>b.classList.contains('picked')?j:-1).filter(j=>j>=0);
+      if(sel.length===q.targets.length && sel.every(j=>q.targets.includes(j))) finish();
+      else { state.wrong++; setFb('hint','Noch nicht ganz.', hintSentAll(sel,q.targets,S.tokens,q.cls)); } });
+    const hintSp=el('span','',`Tippe jedes passende Wort an. Dann „Fertig“.`); act.appendChild(hintSp); act.appendChild(ok);
+    if(window.matchMedia && window.matchMedia('(max-height:520px)').matches){ hintSp.hidden=true; act.classList.add('inline'); note.appendChild(act); } else root.appendChild(act);
+  }
+  st.appendChild(root);
+};
+
+/* ================= Modus 5: Finde das passende Wort! ================= */
+RENDER.find = function(t, st){
+  const root=el('div','task t-find');
+  const tagged = t.prompt.replace(/(NOMEN|VERB|ADJEKTIV)/,'<span class="tag">$1</span>');
+  root.appendChild(el('p','prompt',tagged));
+  const book=el('div','book'); let blank=null, picword=null;
+  if(t.kind==='gap'){
+    const parts=t.sentence.split('___'); const sp=el('p','gapsent'); sp.appendChild(document.createTextNode(parts[0]));
+    blank=el('span','blank','&nbsp;'); blank.setAttribute('aria-label','Lücke'); sp.appendChild(blank); sp.appendChild(document.createTextNode(parts[1]||''));
+    const body=el('div','bookbody'); body.appendChild(sp); book.appendChild(body);
+    book.appendChild(speakBtn(()=>[t.sentence.replace('___','Lücke')].concat(t.options.map(o=>o.word)),'Satz und Wörter vorlesen'));
+  } else {
+    const pol=el('div','polaroid'); pol.innerHTML=artSvg(t.pic); book.appendChild(pol);
+    picword=el('div','picword','&nbsp;'); const body=el('div','bookbody'); body.appendChild(picword); book.appendChild(body);
+    book.appendChild(speakBtn(()=>t.options.map(o=>o.word),'Wörter vorlesen'));
+  }
+  root.appendChild(book);
+  const ans=el('div','answers'); const btns=[];
+  t.options.forEach((o,i)=>{
+    const b=el('button','abtn '+o.skin,o.word); b.type='button'; btns.push(b);
+    b.addEventListener('click',()=>{
+      if(state.locked||b.disabled) return;
+      if(i===t.correct){
+        btns.forEach(x=>{ x.disabled=true; if(x!==b) x.classList.add('dim'); }); b.classList.add('right');
+        const w=o.word;
+        if(t.kind==='gap'){
+          blank.textContent=w; blank.classList.add('full');
+          const full=t.sentence.replace('___',w);
+          solved(full, `„${w}“ ist ${ {N:'ein Nomen',V:'ein Verb',A:'ein Adjektiv'}[t.cls] } und passt in die Lücke.`, full);
+        } else {
+          picword.textContent=w;
+          solved(`${w} → ${CLS_UP[t.cls]}`, explainFindPic(t,w), `${w}. ${CLS_NAME[t.cls]}.`);
+        }
+      } else { b.disabled=true; b.classList.add('tried'); wrong(hintFind(t,o,state.wrong)); }
+    });
+    ans.appendChild(b);
+  });
+  root.appendChild(ans); st.appendChild(root);
+};
+function explainFindPic(t,w){
+  if(t.kind==='picN') return 'Das passt zum Bild. Nomen schreibt man groß.';
+  if(t.kind==='picV') return 'Das passt zum Bild: Ein Verb sagt, was jemand tut.';
+  return 'Das passt zum Bild: Ein Adjektiv sagt, wie etwas ist.';
+}
+
+/* ---- Start ---- */
+function init(){
+  buildStart(); applySound();
+  $('btn-sound').addEventListener('click',toggleSound); $('btn-sound2').addEventListener('click',toggleSound);
+  [$('btn-help'),$('btn-help2')].forEach(b=>{ b.innerHTML=LUPE_ICON; b.addEventListener('click',openHelp); });
+  $('help-close').addEventListener('click',closeHelp); trapKeys($('dlg-help'),closeHelp);
+  $('dlg-help').addEventListener('click',e=>{ if(e.target===$('dlg-help')) closeHelp(); });
+  trapKeys($('dlg-level'),()=>closeLevel(false)); $('lvl-cancel').addEventListener('click',()=>closeLevel(false));
+  $('dlg-level').addEventListener('click',e=>{ if(e.target===$('dlg-level')) closeLevel(false); });
+  $('btn-back').addEventListener('click',()=>{ showScreen('start'); });
+  $('btn-next').addEventListener('click',nextTask);
+  $('btn-again').addEventListener('click',()=>startRound(state.mode,state.level));
+  $('btn-menu').addEventListener('click',()=>showScreen('start'));
+  if(location.hash==='#qa'){ window.__wdDebug={ state, makeRound, validateTask, task:()=>state.task, plan:()=>state.plan, startRound, RENDER }; }
+}
+init();
+
+</script>
+</body>
+</html>
